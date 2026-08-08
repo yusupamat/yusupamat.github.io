@@ -212,7 +212,7 @@
 
       <div class="figbox" style="margin-top:28px;">
         <div class="panel">
-          <img src="images/LiDAR_Tree_Optical_Two.png" alt="LiDAR point cloud versus optical-LiDAR fusion of the same tree" style="width:100%;display:block;border-radius:6px;" />
+          <img src="images/LiDAR_Tree_Optical_Two.PNG" alt="LiDAR point cloud versus optical-LiDAR fusion of the same tree" style="width:100%;display:block;border-radius:6px;" />
         </div>
         <div class="cap">The same tree captured two ways. <b>Top:</b> raw point cloud coloured by return height, with red at the canopy top grading through yellow-green to blue at ground level, each dot a discrete laser return. <b>Bottom:</b> optical-LiDAR fusion of the same scene, where the 3-D structure is draped with colour imagery. Together they show what the diagram above describes: first returns map the canopy surface while last returns penetrate through gaps to the bare earth.</div>
       </div>
@@ -230,7 +230,7 @@
 
       <div class="figbox">
         <div class="panel">
-          <img src="images/LiDAR_Optical_Forest.png" alt="Three-layer LiDAR processing stack: optical imagery, height-coloured point cloud, and bare-earth DEM" style="width:100%;display:block;border-radius:6px;" />
+          <img src="images/LiDAR_Optical_Forest.PNG" alt="Three-layer LiDAR processing stack: optical imagery, height-coloured point cloud, and bare-earth DEM" style="width:100%;display:block;border-radius:6px;" />
         </div>
         <div class="cap">From raw scan to terrain model, shown as three layers over the same forested area. <b>Top:</b> optical imagery for spatial context. <b>Middle:</b> height-coloured point cloud (red = canopy, blue = ground), the direct output of laser ranging. <b>Bottom:</b> bare-earth DEM after ground filtering, with vegetation removed to reveal the underlying terrain surface.</div>
       </div>
@@ -355,7 +355,7 @@
       <p>This is exactly where InSAR takes over. Sentinel-1 passes every 6 to 12 days and accumulates a continuous displacement time series that bridges every gap in the LiDAR record. The two sensors are complementary by design: LiDAR delivers geometry and volume at a single moment; InSAR delivers continuity and regional displacement scale across years. Neither alone tells the full story.</p>
       <p>The part I find most interesting is using machine learning to analyse the relationship between these two data streams and fuse them into a single, higher-resolution product. By mapping sub-pixel InSAR uncertainties onto the LiDAR point cloud, it becomes possible to resolve deformation at the scale of individual buildings and parcels, pinpointing exactly which structures are undergoing differential settlement. That matters for infrastructure risk: a bridge or a row of terraced houses can show measurable relative movement that a regional InSAR grid would smooth over entirely.</p>
       <div class="figbox" style="margin-top:28px;">
-        <img src="images/InSAR_LiDAR_Subsidence.png" alt="Side-by-side comparison of InSAR LOS velocity and LiDAR differential subsidence over the same area, with optical reference" style="width:100%;display:block;border-radius:6px;" />
+        <img src="images/InSAR_LiDAR_Subsidence.PNG" alt="Side-by-side comparison of InSAR LOS velocity and LiDAR differential subsidence over the same area, with optical reference" style="width:100%;display:block;border-radius:6px;" />
         <div class="cap"><b>InSAR vs. LiDAR over the same subsidence site.</b> Left: Sentinel-1 line-of-sight velocity captures the broad deformation bowl but cannot resolve individual structures. Centre: differential LiDAR reveals fine-scale vertical change, including a concentrated sink at building-footprint resolution. Right: optical imagery ties both datasets to the physical landscape. Source: InSAR via Sentinel-1 (ESA); LiDAR via USGS; optical via Esri / Maxar.</div>
       </div>
       <div class="inline-links">
