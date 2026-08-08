@@ -1,0 +1,4 @@
+On the 26th December 2003 an earthquake with MW=6.5 shook a large area of the Kerman Province in Iran. The epicenter of the devastating earthquake was located near the city of Bam. The earthquake was particularly destructive in Bam, with the death toll amounting to at least 34,000 people and injuring up to 200,000. 
+The displacement induced by this event will be analyzed thanks to the images acquired by the European satellite ENVISAT ASAR, on December 3rd 2003 (pre-event) and on February 11th 2004 (post-event). 
+ 
+In this case, only the Descending (track 120) dataset is described

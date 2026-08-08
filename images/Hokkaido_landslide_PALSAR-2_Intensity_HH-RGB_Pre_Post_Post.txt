@@ -1,0 +1,5 @@
+Hokkaido Landslide: Spetember 6, 2018.
+
+PALSAR-2 Intensity color composite: RGB (pre-post-post)
+PALSAR-2 (HH) polarization images provided by JAXA.
+20180823 (pre-earthquake); 20180906 (post-earthquake)

@@ -1,0 +1,7 @@
+Monitoring of Land-Surface Deformation in the Karamay Oilfield, Xinjiang, China, Using SAR Interferometry.
+https://doi.org/10.3390/app7080772
+
+The representative interferogram generated from the data pair (29 November 2006 and 6 May 2008).
+Mean displacement map of ENVISAT-ASAR data from 2003 to 2010. The mean displacement velocity map of the SBAS-InSAR method. Positive (negative) values indicates the ground close to (away from) the satellite. 
+
+The maximum deformation rate attributed to subsurface water injection for the period from 2003 to 2010 was up to approximately 33 mm/year in the line of sight (LOS) direction. 

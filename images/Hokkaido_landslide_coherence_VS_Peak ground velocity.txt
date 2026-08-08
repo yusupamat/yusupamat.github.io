@@ -1,0 +1,7 @@
+
+
+Color composite image (RGB-Pre-co-co) of coherence from descending PALSAR-2 pairs (left); peak ground velocity around the Atsuma town on September 6, 2018 (right)
+
+Pre-event coherence: interferogram of pre-event image pair (20180823-20180614); and co-even coherence: interferogram of co-event image pair (20180823-20180906)
+
+As shown in Figure, considering the whole SAR coverage area, quick identification of landslides can be accomplished using the color composite of coherence pairs (Figure 15a).The possibility of landslide occurrence is higher in areas with higher peak ground velocity (PGV). 

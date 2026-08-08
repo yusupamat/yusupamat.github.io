@@ -1,0 +1,11 @@
+On 6 September 2018, an earthquake with a magnitude of 6.7 MW struck the Iburi Subprefecture in southern Hokkaido, Japan. The earthquake induced mass landslides across the area, especially in Atsuma town.
+JAXA
+PALSAR-2  Descending data  HH polarization
+20180823 and 20180906 
+Color composite: R (Pre event) G (Co-event) B (Co-event)
+
+Pre event (20180823-20180614)
+Co-event (20180823-20180906)
+Coherence is a normalized metric, and its values range from 0 to 1. Coherence can be a good indicator of the quality of the interferogram, a high coherence value is associated with a ‘good quality’ interferogram and vice versa. 
+Furthermore, coherence is sensitive to changes in either the phase or amplitude of a pixel. Therefore, ground surface changes due to earthquakes, landslides or flooding will alter the scattering properties of each pixel in SAR images and will result in low coherence [31].
+As shown in Figure 5c,d, the coherence significantly decreased in the area where landslides occurred. Therefore, SAR coherence was used as the starting point in this study.

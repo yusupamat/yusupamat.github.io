@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yusup Amat — Geospatial Data Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0A1422;
+    --ink-2:#0F1D31;
+    --paper:#EEF1F5;
+    --surface:#FFFFFF;
+    --text:#16202E;
+    --muted:#5E6B7E;
+    --hairline:#DCE2EA;
+    --hairline-dark:rgba(255,255,255,0.12);
+    --accent:#2FB8C6;
+    --accent-ink:#0C4A52;
+    --subsidence:#C44A38;
+    --display:'Archivo',system-ui,sans-serif;
+    --body:'IBM Plex Sans',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    color:var(--text);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent);color:#04222a;}
+
+  /* ---------- shared ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .display{font-family:var(--display);font-weight:800;letter-spacing:-0.02em;line-height:1.02;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:var(--ink);
+    color:#EAF0F8;
+    overflow:hidden;
+    border-bottom:1px solid var(--hairline-dark);
+  }
+  .hero-canvas{
+    position:absolute;inset:0;width:100%;height:100%;
+    display:block;
+    object-fit:cover;
+  }
+  /* readability scrim: dark on the left where the text sits */
+  .hero-scrim{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(90deg, rgba(10,20,34,0.96) 0%, rgba(10,20,34,0.86) 30%, rgba(10,20,34,0.30) 58%, rgba(10,20,34,0.05) 78%, rgba(10,20,34,0.0) 100%);
+    pointer-events:none;
+  }
+  /* one-shot SAR acquisition sweep */
+  .sweep{
+    position:absolute;left:0;right:0;height:140px;top:-140px;
+    background:linear-gradient(180deg, rgba(47,184,198,0) 0%, rgba(47,184,198,0.10) 60%, rgba(47,184,198,0.45) 100%);
+    border-bottom:1px solid rgba(47,184,198,0.55);
+    pointer-events:none;
+    animation:sweep 2.1s cubic-bezier(.4,0,.1,1) .25s 1 forwards;
+    opacity:0;
+  }
+  @keyframes sweep{
+    0%{top:-140px;opacity:0;}
+    8%{opacity:1;}
+    92%{opacity:1;}
+    100%{top:110%;opacity:0;}
+  }
+  .hero-inner{
+    position:relative;
+    min-height:clamp(560px,84vh,820px);
+    display:flex;
+    align-items:center;
+    padding-top:84px;padding-bottom:64px;
+  }
+  .hero-text{max-width:560px;}
+  .hero h1{
+    font-family:var(--display);font-weight:800;
+    font-size:clamp(40px,6vw,74px);
+    line-height:0.98;letter-spacing:-0.025em;
+    margin:18px 0 0;
+  }
+  .name-row{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(15px,1.6vw,17px);letter-spacing:.02em;
+  }
+  .name-row .surname{
+    color:#8DA0BA;border-bottom:1px dotted rgba(141,160,186,.6);
+    font-weight:500;
+  }
+  .hero .lede{
+    margin:22px 0 0;
+    font-size:clamp(15.5px,1.7vw,18px);
+    color:#C4D0E0;max-width:480px;
+  }
+  .hero .lede b{color:#EAF0F8;font-weight:600;}
+  .focus{
+    display:inline-flex;align-items:center;gap:9px;
+    margin-top:34px;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+    color:#A9D9DF;
+    background:rgba(47,184,198,0.08);
+    border:1px solid rgba(47,184,198,0.30);
+    border-radius:999px;padding:7px 18px 7px 13px;
+    white-space:nowrap;
+  }
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 0 rgba(47,184,198,.6);animation:pulse 2.4s ease-out infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(47,184,198,.55);}
+    70%{box-shadow:0 0 0 8px rgba(47,184,198,0);}
+    100%{box-shadow:0 0 0 0 rgba(47,184,198,0);}
+  }
+  .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:52px;}
+  .links a{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;
+    border:1px solid var(--hairline-dark);
+    color:#D6E0EE;
+    padding:9px 15px;border-radius:7px;
+    transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+  }
+  .links a:hover{background:var(--accent);border-color:var(--accent);color:#062227;transform:translateY(-1px);}
+  .links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  /* map furniture */
+  .colorbar{
+    position:absolute;right:26px;top:50%;transform:translateY(-50%);
+    display:flex;gap:9px;align-items:stretch;
+    font-family:var(--mono);font-size:10.5px;color:#C9D6E6;letter-spacing:.02em;
+  }
+  .colorbar .bar{
+    width:11px;border-radius:3px;border:1px solid rgba(255,255,255,.22);
+    background:linear-gradient(180deg,
+      #11305A 0%, #2A5FA0 12%, #5E96C7 26%, #BFD2E2 42%, #E7E6DE 48%,
+      #E9C9A8 54%, #CE6A4C 66%, #97241F 84%, #5C0A16 100%);
+  }
+  .colorbar .ticks{display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;}
+  .colorbar .cap{writing-mode:vertical-rl;transform:rotate(180deg);
+    align-self:center;color:#9FB2C8;letter-spacing:.12em;text-transform:uppercase;font-size:9.5px;}
+  .meta-tr,.meta-bl,.meta-br,.fig-caption{
+    position:absolute;font-family:var(--mono);font-size:10.5px;
+    color:#A9BACE;letter-spacing:.03em;line-height:1.7;
+  }
+  .meta-tr{top:84px;right:78px;text-align:right;}
+  .meta-bl{bottom:26px;left:28px;display:flex;align-items:flex-end;gap:18px;}
+  .meta-br{bottom:26px;right:78px;text-align:right;}
+  .fig-caption{bottom:26px;left:50%;transform:translateX(-50%);color:#7C8EA4;
+    text-transform:uppercase;letter-spacing:.16em;font-size:9.5px;}
+  .scalebar{display:flex;flex-direction:column;gap:4px;}
+  .scalebar .line{width:62px;height:0;border-top:2px solid #C9D6E6;position:relative;}
+  .scalebar .line::before,.scalebar .line::after{content:"";position:absolute;top:-4px;width:2px;height:8px;background:#C9D6E6;}
+  .scalebar .line::after{right:0;}
+  .north{display:flex;flex-direction:column;align-items:center;gap:2px;color:#C9D6E6;}
+  .north svg{width:14px;height:18px;}
+
+  /* ---------- body sections ---------- */
+  section.block{padding:84px 0;border-bottom:1px solid var(--hairline);}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:36px;flex-wrap:wrap;}
+  .sec-head h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);letter-spacing:-0.015em;margin:8px 0 0;}
+
+  /* selected work */
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .card{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:12px;
+    overflow:hidden;display:flex;flex-direction:column;
+    transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(13,30,55,.35);border-color:#c5cedb;}
+  .card .thumb{aspect-ratio:16/10;height:auto;background:var(--ink);display:block;width:100%;object-fit:cover;}
+  .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:7px;flex:1;}
+  .card .fig{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--accent-ink);text-transform:uppercase;}
+  .card h3{font-family:var(--body);font-weight:600;font-size:16.5px;margin:0;line-height:1.3;}
+  .card p{margin:0;color:var(--muted);font-size:13.5px;flex:1;}
+  .card .open{font-family:var(--mono);font-size:12px;color:var(--accent-ink);margin-top:6px;}
+  .card:hover .open{color:var(--accent);}
+
+  /* research themes */
+  .themes{border-top:1px solid var(--hairline);}
+  .theme{
+    display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr) auto;
+    gap:24px;align-items:center;
+    padding:24px 4px;border-bottom:1px solid var(--hairline);
+  }
+  .theme .t-name{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-0.01em;}
+  .theme .t-desc{color:var(--muted);font-size:14px;}
+  .theme .t-tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+  .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:#3C4B5E;
+    border:1px solid var(--hairline);border-radius:5px;padding:4px 8px;background:#fff;}
+
+  /* publications */
+  .pub{display:grid;grid-template-columns:64px 1fr auto;gap:22px;align-items:baseline;
+    padding:20px 4px;border-bottom:1px solid var(--hairline);}
+  .pub .yr{font-family:var(--mono);font-size:13px;color:var(--accent-ink);}
+  .pub .meta{font-size:15px;}
+  .pub .meta .title{font-weight:600;}
+  .pub .meta .venue{color:var(--muted);font-style:italic;font-size:13.5px;}
+  .pub .ph{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#9aa6b5;text-transform:uppercase;}
+  .pub .res{display:flex;gap:8px;}
+  .pub .res a{font-family:var(--mono);font-size:11.5px;color:#3C4B5E;border:1px solid var(--hairline);
+    padding:4px 9px;border-radius:5px;background:#fff;transition:.15s;}
+  .pub .res a:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  /* footer */
+  footer{background:var(--ink);color:#C4D0E0;padding:56px 0 44px;}
+  .foot-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start;}
+  footer .f-name{font-family:var(--display);font-weight:700;color:#EAF0F8;font-size:20px;letter-spacing:-0.01em;}
+  footer .f-sub{font-family:var(--mono);font-size:11.5px;color:#8DA0BA;margin-top:8px;letter-spacing:.03em;}
+  .f-links{display:flex;gap:8px;flex-wrap:wrap;}
+  .f-links a{font-family:var(--mono);font-size:12px;color:#D6E0EE;border:1px solid var(--hairline-dark);
+    padding:8px 13px;border-radius:6px;transition:.18s;}
+  .f-links a:hover{background:var(--accent);border-color:var(--accent);color:#062227;}
+  .f-note{font-family:var(--mono);font-size:10.5px;color:#5E7290;margin-top:40px;letter-spacing:.04em;}
+
+  /* method band */
+  .methods-band{padding:84px 0;border-bottom:1px solid var(--hairline);background:#E7EBF1;}
+  .band-intro{max-width:640px;margin-bottom:42px;}
+  .band-intro p{margin:14px 0 0;color:var(--muted);font-size:15.5px;}
+  .band-intro b{color:var(--text);font-weight:600;}
+  .method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .method{display:flex;flex-direction:column;background:var(--surface);
+    border:1px solid var(--hairline);border-radius:12px;overflow:hidden;
+    transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+  a.method:hover{transform:translateY(-3px);box-shadow:0 16px 34px -20px rgba(13,30,55,.4);border-color:#c5cedb;}
+  a.method:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+  .method .m-fig{display:block;width:100%;aspect-ratio:16/9;height:auto;background:var(--ink);object-fit:cover;}
+  .method .m-body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .method .m-tag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);}
+  .method .m-name{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-0.02em;line-height:1;}
+  .method .m-desc{color:var(--muted);font-size:13.5px;flex:1;}
+  .method .m-go{font-family:var(--mono);font-size:12px;color:var(--accent-ink);margin-top:4px;}
+  a.method:hover .m-go{color:var(--accent);}
+  .method .m-go.soon{color:#9aa6b5;}
+
+  @media (max-width:880px){
+    .method-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:880px){
+    .work-grid{grid-template-columns:1fr;}
+    .theme{grid-template-columns:1fr;gap:8px;align-items:start;}
+    .theme .t-tags{justify-content:flex-start;}
+    .pub{grid-template-columns:48px 1fr;}
+    .pub .res{grid-column:2;margin-top:6px;}
+    .meta-tr{display:none;}
+    .colorbar{right:14px;}
+    .meta-br{right:54px;}
+    .hero-scrim{background:linear-gradient(180deg, rgba(10,20,34,0.55) 0%, rgba(10,20,34,0.35) 40%, rgba(10,20,34,0.92) 100%);}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 18px;}
+    .colorbar .cap{display:none;}
+    .meta-bl{left:18px;}
+    .fig-caption{font-size:8.5px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sweep{display:none;}
+    .pulse{animation:none;}
+    html{scroll-behavior:auto;}
+    .card,.links a{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" aria-label="InSAR ground deformation velocity field">
+    <canvas class="hero-canvas" id="heroField" aria-hidden="true"></canvas>
+    <div class="hero-scrim"></div>
+    <div class="sweep"></div>
+
+    <!-- map furniture -->
+    <div class="colorbar" aria-hidden="true">
+      <div class="cap">LOS velocity · mm yr⁻¹</div>
+      <div class="bar"></div>
+      <div class="ticks"><span>+5</span><span>0</span><span>−5</span><span>−10</span><span>−15</span></div>
+    </div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <div class="eyebrow">SAR · GNSS · LiDAR · AI / ML</div>
+        <div class="name-row" style="margin-top:14px;">
+          <span>YUSUP</span><span class="surname">AMAT</span>
+        </div>
+        <h1>Watching the ground move, millimetre by&nbsp;millimetre.</h1>
+        <p class="lede">Geospatial Data Scientist fusing <b>SAR/InSAR</b>, <b>GNSS</b>, and <b>LiDAR</b> to map ground deformation, and building ML tools that scale those measurements into operational Earth monitoring.</p>
+        <nav class="links" aria-label="Profiles and documents">
+          <a href="about.html">About</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="https://scholar.google.com/citations?user=84_WFsgAAAAJ&hl=en" target="_blank" rel="noopener">Google&nbsp;Scholar</a>
+          <a href="https://orcid.org/0000-0002-4848-5399" target="_blank" rel="noopener">ORCID</a>
+          <a href="https://www.linkedin.com/in/yusupujiang-aimaiti-989b8bb3/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+        <div class="focus"><span class="pulse"></span>CURRENTLY · InSAR accuracy evaluation · multi-sensor fusion · geospatial AI</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ METHODS BAND ============ -->
+  <section class="methods-band" id="methods">
+    <div class="wrap">
+      <div class="band-intro">
+        <div class="eyebrow">How I measure the ground</div>
+        <p>Three complementary sensor types, each strong where the others fall short: <b>spatial coverage</b>, <b>absolute precision</b>, and <b>surface detail</b>. Fused together and driven by <b>machine learning</b>, they form one scalable Earth observation system rather than three separate tools.</p>
+      </div>
+      <div class="method-grid">
+        <a class="method" href="methods-insar.html">
+          <img class="m-fig" src="images/01_Interferogram-circle.png" alt="InSAR interferogram" />
+          <div class="m-body">
+            <div class="m-tag">Regional scale</div>
+            <div class="m-name">InSAR</div>
+            <div class="m-desc">Millions of measurement points across a 250&nbsp;km swath, resolving millimetre-scale motion from satellite radar.</div>
+            <div class="m-go">How it works →</div>
+          </div>
+        </a>
+        <a class="method" href="methods-gnss.html">
+          <img class="m-fig" src="images/PVEP_IGS20_Origional.png" alt="GNSS time series station PVEP" />
+          <div class="m-body">
+            <div class="m-tag">Geodetic precision</div>
+            <div class="m-name">GNSS</div>
+            <div class="m-desc">Continuous, absolute position at fixed stations. The ground truth that ties the radar to the real world.</div>
+            <div class="m-go">How it works →</div>
+          </div>
+        </a>
+        <a class="method" href="methods-lidar.html">
+          <img class="m-fig" src="images/LiDAR_pointCloudENVI.PNG" alt="LiDAR point cloud" />
+          <div class="m-body">
+            <div class="m-tag">Dense coverage</div>
+            <div class="m-name">LiDAR</div>
+            <div class="m-desc">High-resolution elevation from laser returns, providing the fine surface detail needed to underpin and interpret the deformation.</div>
+            <div class="m-go">How it works →</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SELECTED WORK ============ -->
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow">Selected work</div><h2>Selected Work</h2></div>
+      </div>
+      <div class="work-grid">
+        <a class="card" href="work-basin-subsidence.html">
+          <canvas class="thumb" data-seed="1" aria-hidden="true"></canvas>
+          <div class="body">
+            <div class="fig">Fig. 01</div>
+            <h3>Basin-wide subsidence, Australia</h3>
+            <p>Long time-series LOS velocities mapping coal-seam-gas-related deformation across selected locations in eastern Australia.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+        <a class="card" href="work-mining-subsidence.html">
+          <img class="thumb" src="images/open_put_uranium_mining.jpg" alt="Open-pit uranium mining area" />
+          <div class="body">
+            <div class="fig">Fig. 02</div>
+            <h3>Subsidence over an active mining area</h3>
+            <p>Sentinel-1 ascending VV, 2015–2023. A deformation bowl peaking near &minus;18 mm/yr over the extraction footprint.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+        <a class="card" href="work-coastal-urayasu.html">
+          <img class="thumb" src="images/Urayasu.png" alt="Urayasu City coastal subsidence" />
+          <div class="body">
+            <div class="fig">Fig. 03</div>
+            <h3>Coastal subsidence, Urayasu, Japan</h3>
+            <p>24 years of multi-sensor InSAR (ERS-1/-2, ALOS PALSAR, PALSAR-2) over a reclaimed coastal city, validated against leveling.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+        <a class="card" href="work-war-damage-kyiv.html">
+          <img class="thumb" src="images/BuildingDamage-2.png" alt="War-related building damage in Kyiv Oblast" />
+          <div class="body">
+            <div class="fig">Fig. 04</div>
+            <h3>War-related building damage, Kyiv Oblast</h3>
+            <p>Sentinel-1 SAR + Sentinel-2 optical change detection, matching 58% of UNOSAT-labelled damaged buildings.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+        <a class="card" href="work-sinkholes.html">
+          <img class="thumb" src="images/sinkhole_example_on_road.jpg" alt="Sinkhole on an urban road" />
+          <div class="body">
+            <div class="fig">Fig. 05</div>
+            <h3>Sinkholes in cities</h3>
+            <p>Urban ground failure as a window into hidden subsurface processes — and what satellite data can detect before the surface breaks.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+        <a class="card" href="work-validation.html">
+          <img class="thumb" src="images/Sentinel_1 June 03 2025  VV polarization_Over a location_Cryabu_post.png" alt="Sentinel-1 VV SAR image over corner-reflector site" />
+          <div class="body">
+            <div class="fig">Fig. 06</div>
+            <h3>Corner-reflector + GNSS validation</h3>
+            <p>Benchmarking ascending and descending tracks against GPS, with coherence as the deciding variable.</p>
+            <span class="open">Open ↗</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESEARCH ============ -->
+  <section class="block" id="research">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow">Research</div><h2>What the work is about</h2></div>
+      </div>
+      <div class="themes">
+        <div class="theme">
+          <div class="t-name">InSAR methodology &amp; error propagation</div>
+          <div class="t-desc">Long-wavelength correction, single-reference limits, and how error scales with distance.</div>
+          <div class="t-tags"><span class="tag">phase</span><span class="tag">noise</span><span class="tag">long-λ</span></div>
+        </div>
+        <div class="theme">
+          <div class="t-name">Vertical land motion &amp; subsidence</div>
+          <div class="t-desc">Resolving slow ground deformation and separating signal from atmosphere and orbital ramps.</div>
+          <div class="t-tags"><span class="tag">VLM</span><span class="tag">time-series</span></div>
+        </div>
+        <div class="theme">
+          <div class="t-name">Calibration &amp; validation</div>
+          <div class="t-desc">Tying InSAR to ground truth with corner reflectors and continuous GNSS.</div>
+          <div class="t-tags"><span class="tag">CR</span><span class="tag">GNSS</span><span class="tag">coherence</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PUBLICATIONS ============ -->
+  <section class="block" id="publications">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow">Selected publications</div><h2>Recent papers</h2></div>
+        <a href="publications.html" style="font-family:var(--mono);font-size:12.5px;color:var(--accent-ink);border-bottom:1px solid var(--accent);padding-bottom:2px;">Full list ↗</a>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2026</div>
+        <div class="meta">
+          <span class="ph">In preparation</span><br>
+          <span class="title">Enhancing InSAR accuracy Using GNSS and Multi-Epoch LiDAR in Heterogeneous Mining Landscapes.</span><br>
+          <span class="venue">ISPRS Journal of Photogrammetry and Remote Sensing (Under review)</span>
+        </div>
+        <div class="res"></div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2025</div>
+        <div class="meta">
+          <span class="ph">Journal article</span><br>
+          <span class="title">Stability Assessment of the Tepehan Landslide: Before and After the 2023 Kahramanmaras Earthquakes.</span><br>
+          <span class="venue">Geosciences, 15(5), 181</span>
+        </div>
+        <div class="res"><a href="https://doi.org/10.3390/geosciences15050181" target="_blank" rel="noopener">DOI</a></div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2024</div>
+        <div class="meta">
+          <span class="ph">Journal article</span><br>
+          <span class="title">Pixel-based classification method for earthquake-induced landslide mapping using remotely sensed imagery, geospatial data and temporal change information.</span><br>
+          <span class="venue">Natural Hazards, 120(6), pp. 5163–5200</span>
+        </div>
+        <div class="res"><a href="https://doi.org/10.1007/s11069-023-06399-8" target="_blank" rel="noopener">DOI</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <div class="f-name">Yusup Amat</div>
+        <div class="f-sub">SAR &amp; InSAR · vertical land motion · Saint Louis University</div>
+      </div>
+      <div class="f-links">
+        <a href="mailto:tuprak100@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/yusupujiang-aimaiti-989b8bb3/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=84_WFsgAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0000-0002-4848-5399" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+    <div class="wrap"><div class="f-note">St. Louis, MO · Remote Sensing Lab, Saint Louis University</div></div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- diverging "vik"-like colormap: t=0 strong subsidence(red) -> t=1 uplift(blue) ----
+  var STOPS = [
+    [0.00,[92,10,22]],[0.16,[151,36,31]],[0.34,[206,106,76]],
+    [0.46,[233,201,168]],[0.52,[231,230,222]],[0.58,[191,210,226]],
+    [0.74,[94,150,199]],[0.88,[42,95,160]],[1.00,[17,48,90]]
+  ];
+  function cmap(t){
+    t = t<0?0:t>1?1:t;
+    for(var i=1;i<STOPS.length;i++){
+      if(t<=STOPS[i][0]){
+        var a=STOPS[i-1],b=STOPS[i];
+        var f=(t-a[0])/(b[0]-a[0]);
+        return [
+          Math.round(a[1][0]+(b[1][0]-a[1][0])*f),
+          Math.round(a[1][1]+(b[1][1]-a[1][1])*f),
+          Math.round(a[1][2]+(b[1][2]-a[1][2])*f)
+        ];
+      }
+    }
+    return STOPS[STOPS.length-1][1];
+  }
+
+  var VMAX=6, VMIN=-18; // mm/yr range mapped onto the colormap
+
+  // ---- analytic deformation field (subsidence bowls + faint uplift + tilt + texture) ----
+  function makeField(seed){
+    var s = seed||0;
+    var bowls = [
+      {x:0.62,y:0.55,a:-16,sx:0.17,sy:0.14},
+      {x:0.31,y:0.40,a:-7, sx:0.11,sy:0.12},
+      {x:0.16,y:0.80,a:5,  sx:0.13,sy:0.13}
+    ];
+    if(s===1){bowls=[{x:0.55,y:0.52,a:-15,sx:0.19,sy:0.15},{x:0.30,y:0.62,a:-6,sx:0.12,sy:0.12}];}
+    if(s===2){bowls=[{x:0.40,y:0.45,a:-12,sx:0.10,sy:0.10},{x:0.70,y:0.60,a:-12,sx:0.10,sy:0.10},{x:0.55,y:0.5,a:3,sx:0.3,sy:0.3}];}
+    if(s===3){bowls=[{x:0.50,y:0.50,a:-14,sx:0.16,sy:0.16},{x:0.78,y:0.30,a:6,sx:0.10,sy:0.10}];}
+    return function(nx,ny){
+      var v = 0.6*(nx-0.5) - 0.4*(ny-0.5); // gentle regional tilt
+      for(var k=0;k<bowls.length;k++){
+        var b=bowls[k];
+        var dx=(nx-b.x)/b.sx, dy=(ny-b.y)/b.sy;
+        v += b.a*Math.exp(-(dx*dx+dy*dy));
+      }
+      v += 0.8*Math.sin(nx*9+s)*Math.cos(ny*7-s); // faint texture
+      return v;
+    };
+  }
+
+  // ---- render raster (grid -> imagedata -> upscaled draw) ----
+  function renderField(canvas, opts){
+    opts = opts||{};
+    var gw=opts.gw||170, gh=opts.gh||104;
+    var field = makeField(opts.seed);
+    // grid values
+    var grid=new Float32Array(gw*gh);
+    for(var j=0;j<gh;j++)for(var i=0;i<gw;i++){
+      grid[j*gw+i]=field(i/(gw-1), j/(gh-1));
+    }
+    // small offscreen
+    var off=document.createElement('canvas'); off.width=gw; off.height=gh;
+    var octx=off.getContext('2d');
+    var img=octx.createImageData(gw,gh);
+    for(var p=0;p<gw*gh;p++){
+      var t=(grid[p]-VMIN)/(VMAX-VMIN);
+      var c=cmap(t);
+      img.data[p*4]=c[0];img.data[p*4+1]=c[1];img.data[p*4+2]=c[2];img.data[p*4+3]=255;
+    }
+    octx.putImageData(img,0,0);
+
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var rect=canvas.getBoundingClientRect();
+    var W=Math.max(1,Math.round(rect.width)), H=Math.max(1,Math.round(rect.height));
+    canvas.width=W*dpr; canvas.height=H*dpr;
+    var ctx=canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(off,0,0,W,H);
+
+    if(opts.overlay){
+      drawGraticule(ctx,W,H);
+      drawContours(ctx,grid,gw,gh,W,H);
+    }
+  }
+
+  function drawGraticule(ctx,W,H){
+    ctx.save();
+    ctx.strokeStyle='rgba(255,255,255,0.085)'; ctx.lineWidth=1;
+    var stepX=W/9, stepY=H/6;
+    for(var x=stepX;x<W;x+=stepX){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(var y=stepY;y<H;y+=stepY){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.restore();
+  }
+
+  // marching-squares iso-velocity contours
+  function drawContours(ctx,grid,gw,gh,W,H){
+    var levels=[-13,-9,-5,-1,3];
+    var cw=W/(gw-1), ch=H/(gh-1);
+    ctx.save();
+    ctx.lineWidth=1; ctx.strokeStyle='rgba(255,255,255,0.34)';
+    function val(i,j){return grid[j*gw+i];}
+    function ix(i,a,b,L){return (i + (L-a)/(b-a))*cw;}
+    function iy(j,a,b,L){return (j + (L-a)/(b-a))*ch;}
+    for(var l=0;l<levels.length;l++){
+      var L=levels[l];
+      ctx.beginPath();
+      for(var j=0;j<gh-1;j++)for(var i=0;i<gw-1;i++){
+        var tl=val(i,j),tr=val(i+1,j),br=val(i+1,j+1),bl=val(i,j+1);
+        var idx=(tl>L?8:0)|(tr>L?4:0)|(br>L?2:0)|(bl>L?1:0);
+        if(idx===0||idx===15) continue;
+        // edge crossing points
+        var top=[ix(i,tl,tr,L), j*ch];
+        var right=[(i+1)*cw, iy(j,tr,br,L)];
+        var bottom=[ix(i,bl,br,L),(j+1)*ch];
+        var left=[i*cw, iy(j,tl,bl,L)];
+        var seg=[];
+        switch(idx){
+          case 1: case 14: seg=[left,bottom];break;
+          case 2: case 13: seg=[bottom,right];break;
+          case 3: case 12: seg=[left,right];break;
+          case 4: case 11: seg=[top,right];break;
+          case 6: case 9:  seg=[top,bottom];break;
+          case 7: case 8:  seg=[left,top];break;
+          case 5: seg=[left,top]; ctx.moveTo(bottom[0],bottom[1]);ctx.lineTo(right[0],right[1]); break;
+          case 10:seg=[left,bottom]; ctx.moveTo(top[0],top[1]);ctx.lineTo(right[0],right[1]); break;
+        }
+        if(seg.length){ctx.moveTo(seg[0][0],seg[0][1]);ctx.lineTo(seg[1][0],seg[1][1]);}
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // ---- GNSS displacement time series (precision at a point) ----
+  function renderGNSS(canvas){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var rect=canvas.getBoundingClientRect();
+    var W=Math.max(1,Math.round(rect.width)),H=Math.max(1,Math.round(rect.height));
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    var ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A1422';ctx.fillRect(0,0,W,H);
+    var x0=16,x1=W-14,y0=18,y1=H-16,n=82;
+    ctx.strokeStyle='rgba(255,255,255,0.09)';ctx.lineWidth=1;
+    for(var g=0;g<=3;g++){var gy=y0+(y1-y0)*g/3;ctx.beginPath();ctx.moveTo(x0,gy);ctx.lineTo(x1,gy);ctx.stroke();}
+    var pts=[];for(var i=0;i<n;i++){var t=i/(n-1);pts.push(-t*1.0 + 0.10*Math.sin(t*Math.PI*6));}
+    var vmin=-1.18,vmax=0.22;
+    function X(i){return x0+(x1-x0)*i/(n-1);}
+    function Y(v){return y0+(y1-y0)*(1-(v-vmin)/(vmax-vmin));}
+    ctx.fillStyle='rgba(173,201,223,0.50)';
+    for(var i=0;i<n;i++){var nz=((Math.sin(i*12.9898)*43758.5453)%1-0.5)*0.17;
+      ctx.beginPath();ctx.arc(X(i),Y(pts[i]+nz),1.5,0,7);ctx.fill();}
+    ctx.strokeStyle='#2FB8C6';ctx.lineWidth=2;ctx.beginPath();
+    for(var i=0;i<n;i++){if(i===0)ctx.moveTo(X(i),Y(pts[i]));else ctx.lineTo(X(i),Y(pts[i]));}
+    ctx.stroke();
+  }
+
+  // ---- LiDAR point cloud (dense surface coverage) ----
+  function renderLidar(canvas){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var rect=canvas.getBoundingClientRect();
+    var W=Math.max(1,Math.round(rect.width)),H=Math.max(1,Math.round(rect.height));
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    var ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A1422';ctx.fillRect(0,0,W,H);
+    var cols=Math.max(28,Math.round(W/7)),rows=Math.max(16,Math.round(H/6));
+    function hgt(u,v){return Math.sin(u*6)*Math.cos(v*4)+0.5*Math.sin(u*11+v*3);}
+    function hcol(h){var t=(h+1.5)/3;t=t<0?0:t>1?1:t;var a,b,f;
+      if(t<0.5){a=[17,48,90];b=[47,184,198];f=t/0.5;}else{a=[47,184,198];b=[231,236,242];f=(t-0.5)/0.5;}
+      return 'rgb('+Math.round(a[0]+(b[0]-a[0])*f)+','+Math.round(a[1]+(b[1]-a[1])*f)+','+Math.round(a[2]+(b[2]-a[2])*f)+')';}
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+      var u=c/(cols-1),v=r/(rows-1),h=hgt(u,v);
+      ctx.fillStyle=hcol(h);
+      ctx.beginPath();ctx.arc(8+u*(W-16),10+v*(H-20)-h*4,1.4,0,7);ctx.fill();
+    }
+  }
+
+  // ---- init + resize ----
+  var hero=document.getElementById('heroField');
+  var thumbs=[].slice.call(document.querySelectorAll('.thumb'));
+  var mfigs=[].slice.call(document.querySelectorAll('.m-fig'));
+  function renderAll(){
+    renderField(hero,{overlay:true,gw:180,gh:108});
+    thumbs.forEach(function(c){if(c.tagName==='CANVAS'){renderField(c,{seed:parseInt(c.dataset.seed,10),gw:110,gh:70});}});
+    mfigs.forEach(function(c){
+      if(c.tagName!=='CANVAS') return;
+      var m=c.dataset.method;
+      if(m==='gnss') renderGNSS(c);
+      else if(m==='lidar') renderLidar(c);
+      else renderField(c,{seed:5,gw:120,gh:68});
+    });
+  }
+  renderAll();
+  var rt;
+  window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(renderAll,160);});
+})();
+</script>
+</body>
+</html>

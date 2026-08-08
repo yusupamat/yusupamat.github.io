@@ -1,0 +1,5 @@
+https://www.iceye.com/blog/monitoring-our-rapidly-changing-earth
+
+Volcanic eruption 
+
+In 2021, ICEYE monitored the eruption of the Fagradalsfjall volcano in Iceland (see image below). Over 26 days, seven different fissures opened up and poured lava out onto the earth. By working in collaboration with the University of Iceland and the Icelandic Space Agency, we were able to create an underlying predictive model based on the daily observations being made through SAR technology. Being able to anticipate where new fissures are going to appear is critical from a public safety perspective, especially in tourism-driven locations like this one.

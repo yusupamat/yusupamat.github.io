@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — Yusup Amat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0A1422;--ink-2:#0F1D31;--paper:#EEF1F5;--surface:#FFFFFF;
+    --text:#16202E;--muted:#5E6B7E;--hairline:#DCE2EA;--hairline-dark:rgba(255,255,255,0.12);
+    --accent:#2FB8C6;--accent-ink:#0C4A52;
+    --display:'Archivo',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--body);color:var(--text);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.6;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent);color:#04222a;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
+  .prose{max-width:720px;}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);}
+
+  .nav{position:sticky;top:0;z-index:20;background:rgba(10,20,34,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--hairline-dark);}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .nav .brand{font-family:var(--display);font-weight:700;color:#EAF0F8;letter-spacing:.02em;font-size:15px;}
+  .nav .brand .dot{color:var(--accent);}
+  .nav .nlinks{display:flex;gap:6px;}
+  .nav .nlinks a{font-family:var(--mono);font-size:12px;color:#B9C6D8;padding:7px 12px;border-radius:6px;transition:.15s;}
+  .nav .nlinks a:hover{color:#fff;background:rgba(255,255,255,.07);}
+  .nav .nlinks a.here{color:var(--accent);}
+
+  /* hero */
+  .ahero{position:relative;background:var(--ink);color:#EAF0F8;overflow:hidden;border-bottom:1px solid var(--hairline-dark);}
+  .ahero::after{content:"";position:absolute;top:-30%;right:-10%;width:60%;height:160%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(47,184,198,0.10),transparent 70%);}
+  .ahero .inner{position:relative;padding:62px 0 56px;display:flex;gap:46px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+  .ahero .htext{max-width:600px;}
+  .ahero h1{font-family:var(--display);font-weight:800;font-size:clamp(38px,5.6vw,64px);line-height:1;letter-spacing:-0.025em;margin:12px 0 0;}
+  .ahero .role{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:#A9D9DF;margin-top:16px;}
+  .ahero .intro{margin-top:18px;color:#C4D0E0;font-size:clamp(15px,1.7vw,18px);max-width:540px;}
+  .ahero .cta{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap;}
+  .ahero .cta a{font-family:var(--mono);font-size:12.5px;border:1px solid var(--hairline-dark);color:#D6E0EE;padding:9px 15px;border-radius:7px;transition:.18s;}
+  .ahero .cta a:hover{background:var(--accent);border-color:var(--accent);color:#062227;transform:translateY(-1px);}
+  .ahero .cta a.primary{background:var(--accent);border-color:var(--accent);color:#062227;}
+  .ahero .cta a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  .avatar{width:clamp(150px,21vw,210px);aspect-ratio:1;border-radius:20px;flex:none;position:relative;overflow:hidden;
+    background:linear-gradient(158deg,#143052,#0A1422 70%);border:1px solid var(--hairline-dark);
+    display:flex;align-items:center;justify-content:center;}
+  .avatar .mono{font-family:var(--display);font-weight:800;font-size:clamp(58px,9vw,86px);color:var(--accent);letter-spacing:-0.05em;}
+  .avatar .ring{position:absolute;inset:11px;border:1px solid rgba(47,184,198,0.22);border-radius:13px;}
+  .avatar .lbl{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:#5E7290;text-transform:uppercase;}
+
+  section.mblock{padding:60px 0;border-bottom:1px solid var(--hairline);}
+  .h-sec{margin-bottom:24px;}
+  .h-sec h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);letter-spacing:-0.015em;margin:8px 0 0;}
+  .prose p{font-size:16px;margin:0 0 18px;}
+  .prose p:last-child{margin-bottom:0;}
+  .prose b{font-weight:600;}
+  .ph{color:#9aa6b5;}
+
+  /* interests */
+  .interest{padding:24px 0;border-bottom:1px solid var(--hairline);display:grid;grid-template-columns:46px 1fr;gap:20px;align-items:start;}
+  .interest:first-of-type{border-top:1px solid var(--hairline);}
+  .interest .n{font-family:var(--mono);font-size:12px;color:var(--accent-ink);padding-top:5px;}
+  .interest h3{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-0.01em;margin:0 0 6px;}
+  .interest p{margin:0;color:var(--muted);font-size:15px;max-width:680px;}
+
+  /* cv */
+  .cvgrid{display:grid;grid-template-columns:1fr 1fr;gap:44px;}
+  .cvcol .sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:8px;}
+  .tl-item{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:15px 0;border-bottom:1px solid var(--hairline);}
+  .tl-item .y{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px;}
+  .tl-item .role{font-weight:600;font-size:15px;}
+  .tl-item .org{color:var(--muted);font-size:13.5px;margin-top:2px;}
+
+  /* tools */
+  .tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:4px;}
+  .tool{font-family:var(--mono);font-size:12px;color:#2A3645;border:1px solid var(--hairline);background:#fff;padding:7px 13px;border-radius:7px;}
+
+  /* audio player */
+  .audio-bar{background:var(--ink);border-top:1px solid rgba(255,255,255,0.07);padding:22px 0;}
+  .audio-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .audio-label{flex:0 0 auto;}
+  .audio-label .a-eye{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .audio-label .a-title{font-family:var(--display);font-weight:600;font-size:14px;color:#EAF0F8;margin-top:3px;}
+  .audio-label .a-sub{font-family:var(--mono);font-size:11px;color:#7A8FA8;margin-top:2px;}
+  .play-btn{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;color:#04222a;}
+  .play-btn:hover{background:#26d4e4;}
+  .play-btn svg{width:16px;height:16px;fill:currentColor;}
+  .audio-track{flex:1 1 160px;display:flex;flex-direction:column;gap:6px;}
+  .progress-wrap{position:relative;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;cursor:pointer;}
+  .progress-fill{height:4px;background:var(--accent);border-radius:2px;width:0%;transition:width .1s linear;}
+  .time-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:#5E7A94;}
+
+  /* contact */
+  .contact{background:var(--ink-2);color:#EAF0F8;padding:60px 0;border-bottom:1px solid var(--hairline-dark);}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .contact h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);letter-spacing:-0.015em;margin:8px 0 0;}
+  .contact p{color:#C4D0E0;margin:14px 0 0;max-width:520px;}
+  .contact .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
+  .contact .row a{font-family:var(--mono);font-size:12.5px;border:1px solid var(--hairline-dark);color:#D6E0EE;padding:9px 15px;border-radius:7px;transition:.18s;}
+  .contact .row a:hover{background:var(--accent);border-color:var(--accent);color:#062227;}
+  .contact .row a.primary{background:var(--accent);border-color:var(--accent);color:#062227;}
+
+  /* poem */
+  .poem-block{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;border-left:2px solid rgba(47,184,198,0.35);padding-left:24px;}
+  .poem-block.visible{opacity:1;transform:translateY(0);}
+  .poem-attr{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+  .poem-en{font-size:15px;line-height:2;color:#C4D0E0;font-style:italic;}
+  .poem-divider{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;}
+  .poem-uy{font-size:15px;line-height:2.2;color:#A9BACE;text-align:right;direction:rtl;font-style:italic;}
+  @media(max-width:820px){.contact-grid{grid-template-columns:1fr;gap:40px;}.poem-block{border-left:none;border-top:2px solid rgba(47,184,198,0.35);padding-left:0;padding-top:24px;}}
+
+  footer{background:var(--ink);color:#C4D0E0;padding:54px 0 42px;}
+  .foot-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start;}
+  footer .f-name{font-family:var(--display);font-weight:700;color:#EAF0F8;font-size:20px;}
+  footer .f-sub{font-family:var(--mono);font-size:11.5px;color:#8DA0BA;margin-top:8px;}
+  .f-links{display:flex;gap:8px;flex-wrap:wrap;}
+  .f-links a{font-family:var(--mono);font-size:12px;color:#D6E0EE;border:1px solid var(--hairline-dark);padding:8px 13px;border-radius:6px;transition:.18s;}
+  .f-links a:hover{background:var(--accent);border-color:var(--accent);color:#062227;}
+
+  @media (max-width:820px){
+    .cvgrid{grid-template-columns:1fr;gap:36px;}
+    .nav .nlinks a:not(.here){display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}.ahero .cta a,.contact .row a{transition:none;}.poem-block{opacity:1;transform:none;transition:none;}}
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap">
+      <a class="brand" href="index.html">YUSUP<span class="dot">.</span></a>
+      <div class="nlinks">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="here">About</a>
+        <a href="index.html#methods">Methods</a>
+        <a href="index.html#work">Work</a>
+        <a href="publications.html">Publications</a>
+        <a href="gallery.html">Gallery</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="ahero">
+    <div class="wrap inner">
+      <div class="htext">
+        <div class="eyebrow">About</div>
+        <h1>Yusup Amat</h1>
+        <div class="role">Research Scientist · Geospatial Data Scientist · Remote Sensing Lab, Saint Louis University</div>
+        <p class="intro">I fuse satellite radar, GNSS, LiDAR, and optical data to map how the Earth's surface moves. I'm also building the machine-learning layer that turns those measurements into scalable, physics-informed prediction.</p>
+        <div class="cta">
+          <a class="primary" href="mailto:tuprak100@gmail.com">Email me</a>
+          <a href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <div class="avatar" aria-label="Profile photo">
+        <div class="ring"></div>
+        <img src="my_photo.jpg" alt="Yusup Amat" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;border-radius:20px;" />
+      </div>
+    </div>
+  </header>
+
+  <!-- bio -->
+  <section class="mblock" id="bio">
+    <div class="wrap prose">
+      <div class="h-sec"><div class="eyebrow">Bio</div><h2>A bit about me</h2></div>
+      <p>I started in classical remote sensing: land cover classification, change detection, forest net primary productivity estimation using the CASA model, and integrating satellite imagery with weather records and field surveys into spatial databases for regional environmental policy. That foundation taught me to think across data types before I'd ever processed a SAR image.</p>
+      <p>My PhD at <b>Chiba University, Japan</b> pulled me into the world of radar geodesy. I applied multi-temporal InSAR to coastal land subsidence, earthquake-triggered landslides, and mining-induced deformation, and learned how much trust you have to earn before a satellite velocity field means anything. That work became a series of peer-reviewed papers and a habit of asking "what could be wrong with this number?" before presenting it as a result.</p>
+      <p>As a postdoctoral researcher at the <b>Center for Remote Sensing, Boston University</b>, I shifted toward natural and human-induced damage estimation, using SAR coherence and intensity to detect structural change after earthquakes and conflict at scale. The speed requirement of disaster response pushed me toward automation and reproducibility in ways that pure academic research rarely does.</p>
+      <p>At the <b>Remote Sensing Lab, Saint Louis University</b>, my focus shifted to accuracy: evaluating InSAR time series against GNSS and airborne LiDAR, understanding where the errors come from, and building the calibration-and-validation pipeline that makes the measurements trustworthy. Along the way I got deep into airborne LiDAR post-processing, UAV LiDAR collection and pre/post-processing, and digital twin workflows. In late 2024 I completed a <b>data science boot camp at the Erdős Institute</b>, which sharpened my ML skills and confirmed the direction I want to go next.</p>
+      <p>I'm now building toward a career as a <b>Geospatial Data Scientist</b>, fusing InSAR, GNSS, LiDAR, and optical sensors with machine learning to tackle not just ground deformation but broader Earth observation challenges: hazard forecasting, climate monitoring, precision agriculture, urban resilience. The sensors are the vocabulary; the AI layer is what lets them speak at scale.</p>
+    </div>
+  </section>
+
+  <!-- research interests -->
+  <section class="mblock" id="interests">
+    <div class="wrap">
+      <div class="h-sec prose"><div class="eyebrow">Research interests</div><h2>What I work on</h2></div>
+      <div class="prose" style="max-width:760px;">
+        <div class="interest">
+          <div class="n">01</div>
+          <div>
+            <h3>InSAR methodology &amp; error propagation</h3>
+            <p>How error enters and travels through an InSAR time series: long-wavelength correction, the limits of a single reference point, and how calibration quality decays with distance from it.</p>
+          </div>
+        </div>
+        <div class="interest">
+          <div class="n">02</div>
+          <div>
+            <h3>Vertical land motion, subsidence &amp; hazards</h3>
+            <p>Resolving slow basin-scale ground deformation, earthquake-triggered landslides, and mining-induced subsidence, with the core challenge being to separate real signal from atmospheric noise, orbital ramps, and decorrelation.</p>
+          </div>
+        </div>
+        <div class="interest">
+          <div class="n">03</div>
+          <div>
+            <h3>Calibration &amp; validation</h3>
+            <p>Tying relative radar measurements to absolute ground truth with corner reflectors, GNSS, and airborne LiDAR, then stress-testing the result track by track.</p>
+          </div>
+        </div>
+        <div class="interest">
+          <div class="n">04</div>
+          <div>
+            <h3>Geospatial AI &amp; multi-sensor fusion</h3>
+            <p>Applying machine learning and deep learning to fuse InSAR, GNSS, LiDAR, and optical observations for scalable Earth monitoring, covering damage detection, hazard forecasting, and climate and land-use change at regional scale.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- future direction -->
+  <section class="mblock" id="direction">
+    <div class="wrap">
+      <div class="h-sec prose"><div class="eyebrow">Future direction</div><h2>Multi-Sensor Geospatial Intelligence, Powered by AI</h2></div>
+      <div class="prose" style="margin-bottom:28px;">
+        <p>Fusing InSAR, GNSS, LiDAR and optical observations into data-driven Earth monitoring, spanning hazard and disaster response, climate and carbon monitoring, precision agriculture, urban and infrastructure resilience, and ecosystem and water resources.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:14px;overflow:hidden;padding:12px;max-width:680px;">
+        <img src="images/geospatial_ai_hub.drawio_2.svg"
+             alt="Multi-sensor geospatial AI hub diagram: InSAR, GNSS, LiDAR and Optical converging on an AI/ML fusion core"
+             style="width:100%;height:auto;display:block;" />
+      </div>
+      <div style="font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:10px;letter-spacing:.02em;">
+        Bridging physics-based multi-sensor remote sensing with AI/ML for scalable Earth observation.
+      </div>
+    </div>
+  </section>
+
+  <!-- background / cv -->
+  <section class="mblock" id="cv">
+    <div class="wrap">
+      <div class="h-sec prose"><div class="eyebrow">Background</div><h2>Education &amp; experience</h2></div>
+      <div class="cvgrid">
+        <div class="cvcol">
+          <div class="sub">Education</div>
+          <div class="tl-item"><div class="y">2019</div><div><div class="role">PhD, Urban Environment Systems</div><div class="org">Chiba University, Japan</div></div></div>
+          <div class="tl-item"><div class="y">2015</div><div><div class="role">MS, GIS &amp; Cartography</div><div class="org">Xinjiang Normal University, China</div></div></div>
+          <div class="tl-item"><div class="y">2012</div><div><div class="role">BA, Geography</div><div class="org">Xinjiang Normal University, China</div></div></div>
+        </div>
+        <div class="cvcol">
+          <div class="sub">Experience</div>
+          <div class="tl-item"><div class="y">2022–now</div><div><div class="role">Research Scientist</div><div class="org">Remote Sensing Lab, Saint Louis University</div></div></div>
+          <div class="tl-item"><div class="y">2024</div><div><div class="role">Data Science Boot Camp</div><div class="org">Erdős Institute</div></div></div>
+          <div class="tl-item"><div class="y">2021–22</div><div><div class="role">Postdoctoral Researcher</div><div class="org">Center for Remote Sensing, Boston University</div></div></div>
+          <div class="tl-item"><div class="y">2020–21</div><div><div class="role">Support Engineer</div><div class="org">ICM Airport Technics, Japan</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tools -->
+  <section class="mblock" id="tools">
+    <div class="wrap">
+      <div class="h-sec prose"><div class="eyebrow">Toolbox</div><h2>What I work with</h2></div>
+      <div class="tools">
+        <span class="tool">Sentinel-1 / ALOS PALSAR / NISAR</span>
+        <span class="tool">ENVI SARscape</span>
+        <span class="tool">ISCE</span>
+        <span class="tool">SNAP</span>
+        <span class="tool">Python</span>
+        <span class="tool">scikit-learn</span>
+        <span class="tool">PyTorch</span>
+        <span class="tool">pandas / numpy</span>
+        <span class="tool">ArcGIS / QGIS</span>
+        <span class="tool">ERDAS / ENVI</span>
+        <span class="tool">UAV LiDAR (RIEGL)</span>
+        <span class="tool">GNSS (Trimble R12)</span>
+        <span class="tool">Google Earth Engine</span>
+        <span class="tool">Git</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="eyebrow">Contact</div>
+        <h2>Get in touch</h2>
+        <p>Happy to talk InSAR, GNSS, LiDAR, vertical land motion, Digital twin, or potential collaboration. The fastest way to reach me is email.</p>
+        <div class="row">
+          <a class="primary" href="mailto:tuprak100@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/yusupujiang-aimaiti-989b8bb3/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://scholar.google.com/citations?user=84_WFsgAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+          <a href="https://orcid.org/0000-0002-4848-5399" target="_blank" rel="noopener">ORCID</a>
+          <a href="#">Download CV (PDF)</a>
+        </div>
+      </div>
+      <div class="poem-block" id="poem-block">
+        <div class="poem-attr">Youth — L. Mutallip</div>
+        <div class="poem-en">
+          Youth is a graceful prime,<br>
+          But short it stays.<br>
+          With each torn page of time,<br>
+          A petal falls away.
+        </div>
+        <hr class="poem-divider">
+        <div class="poem-uy" lang="ug" dir="rtl">
+          ياشلىق ئادەمنىڭ زىلۋا بىر چېغى،<br>
+          تولىمۇ قىسقا ئۇنىڭ ئۆمرى بىراق.<br>
+          يىرتىلسا كالىندارنىڭ بىر ۋارىقى،<br>
+          ياشلىق گۈلىدىن تۆكۈلىدۇ بىر تال يۇپۇرماق.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- audio player -->
+  <div class="audio-bar" id="audio-bar">
+    <div class="wrap audio-inner">
+      <div class="audio-label">
+        <div class="a-eye">Now playing</div>
+        <div class="a-title">Yashlighim (Youth)</div>
+        <div class="a-sub">Uyghur Tambur music · my favourite</div>
+      </div>
+      <button class="play-btn" id="play-btn" aria-label="Play">
+        <!-- play icon -->
+        <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <!-- pause icon, hidden -->
+        <svg id="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <div class="audio-track">
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="time-row">
+          <span id="time-cur">0:00</span>
+          <span id="time-dur">—</span>
+        </div>
+      </div>
+    </div>
+    <audio id="player" src="images/Tambur_Yashligim.mp3" loop preload="metadata"></audio>
+  </div>
+
+  <script>
+    /* poem scroll reveal */
+    (function(){
+      var poem = document.getElementById('poem-block');
+      if(!poem) return;
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ poem.classList.add('visible'); obs.disconnect(); }
+        });
+      }, {threshold: 0.25});
+      obs.observe(poem);
+    })();
+  </script>
+
+  <script>
+    (function(){
+      var audio = document.getElementById('player');
+      var btn   = document.getElementById('play-btn');
+      var iPlay = document.getElementById('icon-play');
+      var iPause= document.getElementById('icon-pause');
+      var fill  = document.getElementById('progress-fill');
+      var wrap  = document.getElementById('progress-wrap');
+      var cur   = document.getElementById('time-cur');
+      var dur   = document.getElementById('time-dur');
+
+      function fmt(s){ var m=Math.floor(s/60); return m+':'+(Math.floor(s%60)<10?'0':'')+Math.floor(s%60); }
+
+      audio.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(audio.duration); });
+
+      audio.addEventListener('timeupdate', function(){
+        if(!audio.duration) return;
+        fill.style.width = (audio.currentTime/audio.duration*100)+'%';
+        cur.textContent  = fmt(audio.currentTime);
+      });
+
+      btn.addEventListener('click', function(){
+        if(audio.paused){ audio.play(); iPlay.style.display='none'; iPause.style.display=''; }
+        else { audio.pause(); iPlay.style.display=''; iPause.style.display='none'; }
+      });
+
+      wrap.addEventListener('click', function(e){
+        if(!audio.duration) return;
+        var rect = wrap.getBoundingClientRect();
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+      });
+    })();
+  </script>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <div class="f-name">Yusup Amat</div>
+        <div class="f-sub">SAR &amp; InSAR · vertical land motion · Saint Louis University</div>
+      </div>
+      <div class="f-links">
+        <a href="index.html">Home</a>
+        <a href="mailto:tuprak100@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/yusupujiang-aimaiti-989b8bb3/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=84_WFsgAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0000-0002-4848-5399" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

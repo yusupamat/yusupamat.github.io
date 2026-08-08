@@ -1,0 +1,18 @@
+
+Detroit International Airport_Darren Muff_LinkedIn_Post
+
+https://www.linkedin.com/posts/darren-muff-195397192_sar-satellites-trainspotting-activity-7185699479449124864-iiYu?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAABgzi7kB2sBl9vcQfI09TmykSfHcRrcIC0M
+
+I like to share neat stuff when I find them. I thought that this was cool. This is a 50cm ground resolution image of Detroit International Airport taken using a Dwell collection of 50 seconds. In this image we saw this weird bright line running diagonally down the image. Any idea what it is?
+
+It's a long train travelling down the track from top left to bottom right. In this example the satellite (ICEYE-X23 taken at 1932 UTC on 15th September 2023) is moving across the top of the image from right to left and looking down the image (ie looking left of track with increasing range down). 
+
+The train looks like this because SAR uses the Doppler effect caused by objects on the ground moving towards and then away from the satellite as it travels past. 
+
+Unfortunately SAR processors think that the world is stationary. So when something is moving (like this train) then the SAR processor gets confused. In this example the train is moving away from the satellite so the SAR processor places the train's signature to the aft direction - where everything else on the ground is also moving away from the satellite.
+
+ The video is really a sequence of individual SAR images. In the first frame the satellite is on the right hand side and so the train is not moving that fast radially away from the satellite - as a result it is displaced by a small amount - you can see the railway line it is near, just to the left of it - and more interestingly you can see the shadow of the train on the tracks. 
+
+On subsequent frames the velocity of the train away from the satellite increases as the satellite moves from top right to top left. As a result the displacement of the train increases. 
+So here is a good puzzle for you - can anyone work out which train this is and how fast it's going? 
+Also can you see the signatures from the power lines next to the road - a small row of dots moving to the right?

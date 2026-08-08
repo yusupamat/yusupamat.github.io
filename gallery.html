@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gallery — Yusup Amat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0A1422;--ink-2:#0F1D31;--paper:#EEF1F5;--surface:#FFFFFF;
+    --text:#16202E;--muted:#5E6B7E;--hairline:#DCE2EA;--hairline-dark:rgba(255,255,255,0.12);
+    --accent:#2FB8C6;--accent-ink:#0C4A52;
+    --display:'Archivo',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--body);color:var(--text);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.6;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent);color:#04222a;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px;}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:100;background:rgba(10,20,34,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--hairline-dark);}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .nav .brand{font-family:var(--display);font-weight:700;color:#EAF0F8;letter-spacing:.02em;font-size:15px;}
+  .nav .brand .dot{color:var(--accent);}
+  .nav .nlinks{display:flex;gap:6px;}
+  .nav .nlinks a{font-family:var(--mono);font-size:12px;color:#B9C6D8;padding:7px 12px;border-radius:6px;transition:.15s;}
+  .nav .nlinks a:hover{color:#fff;background:rgba(255,255,255,.07);}
+  .nav .nlinks a.here{color:var(--accent);}
+
+  /* banner */
+  .banner{background:var(--ink);color:#EAF0F8;padding:64px 0 52px;border-bottom:1px solid var(--hairline-dark);}
+  .banner h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,8vw,90px);line-height:.92;letter-spacing:-0.03em;margin:10px 0 0;}
+  .banner .b-def{margin:18px 0 0;max-width:560px;color:#C4D0E0;font-size:clamp(15px,1.7vw,17.5px);}
+
+  /* filter bar */
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--hairline);position:sticky;top:58px;z-index:90;}
+  .filter-bar .wrap{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0;}
+  .f-btn{font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--hairline);background:#fff;padding:7px 14px;border-radius:999px;cursor:pointer;transition:.15s;letter-spacing:.03em;}
+  .f-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
+  .f-btn.active{background:var(--accent);border-color:var(--accent);color:#04222a;font-weight:600;}
+
+  /* count badge */
+  .count{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto;align-self:center;white-space:nowrap;}
+
+  /* masonry grid */
+  .gallery-section{padding:40px 0 80px;}
+  .masonry{columns:3;column-gap:18px;}
+  .g-item{break-inside:avoid;margin-bottom:18px;border-radius:12px;overflow:hidden;background:var(--ink);border:1px solid var(--hairline);cursor:pointer;position:relative;transition:transform .2s,box-shadow .2s;}
+  .g-item:hover{transform:translateY(-3px);box-shadow:0 16px 40px -20px rgba(13,30,55,.45);}
+  .g-item img,.g-item video{display:block;width:100%;height:auto;border-radius:0;}
+  .g-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,34,.9) 0%,transparent 50%);opacity:0;transition:opacity .2s;border-radius:12px;}
+  .g-item:hover .g-overlay{opacity:1;}
+  .g-meta{position:absolute;bottom:0;left:0;right:0;padding:16px;transform:translateY(6px);opacity:0;transition:transform .2s,opacity .2s;}
+  .g-item:hover .g-meta{transform:translateY(0);opacity:1;}
+  .g-cat-badge{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+  .g-title-ov{font-family:var(--display);font-weight:700;font-size:14px;color:#EAF0F8;line-height:1.2;}
+
+  /* hidden items */
+  .g-item.hidden{display:none;}
+
+  /* empty state */
+  .empty{display:none;padding:80px 0;text-align:center;font-family:var(--mono);font-size:13px;color:var(--muted);}
+  .empty.visible{display:block;}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;z-index:999;background:rgba(5,12,24,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s;}
+  .lb.open{opacity:1;pointer-events:all;}
+  .lb-inner{display:flex;flex-direction:column;align-items:center;max-width:92vw;max-height:92vh;position:relative;}
+  .lb-media{display:flex;align-items:center;justify-content:center;max-width:88vw;max-height:78vh;}
+  .lb-media img,.lb-media video{display:block;max-width:100%;max-height:78vh;border-radius:10px;object-fit:contain;}
+  .lb-caption{margin-top:18px;text-align:center;max-width:680px;padding:0 16px;}
+  .lb-title{font-family:var(--display);font-weight:700;font-size:18px;color:#EAF0F8;letter-spacing:-0.01em;}
+  .lb-desc{font-size:14px;color:#A8B8CE;margin-top:8px;line-height:1.6;}
+  .lb-credit{font-family:var(--mono);font-size:11px;color:#5E6B7E;margin-top:8px;letter-spacing:.03em;}
+  .lb-credit a{color:var(--accent);border-bottom:1px solid rgba(47,184,198,.3);}
+  .lb-close{position:fixed;top:20px;right:24px;background:none;border:none;color:#EAF0F8;font-size:32px;cursor:pointer;line-height:1;opacity:.7;transition:.15s;z-index:1001;padding:4px;}
+  .lb-close:hover{opacity:1;}
+  .lb-prev,.lb-next{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#EAF0F8;font-size:28px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:.15s;z-index:1001;}
+  .lb-prev{left:16px;}
+  .lb-next{right:16px;}
+  .lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.15);}
+  .lb-counter{position:fixed;top:22px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;color:#8DA0BA;letter-spacing:.06em;}
+
+  /* footer */
+  footer{background:var(--ink);color:#C4D0E0;padding:54px 0 42px;}
+  .foot-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start;}
+  footer .f-name{font-family:var(--display);font-weight:700;color:#EAF0F8;font-size:20px;}
+  footer .f-sub{font-family:var(--mono);font-size:11.5px;color:#8DA0BA;margin-top:8px;}
+  .f-links{display:flex;gap:8px;flex-wrap:wrap;}
+  .f-links a{font-family:var(--mono);font-size:12px;color:#D6E0EE;border:1px solid var(--hairline-dark);padding:8px 13px;border-radius:6px;transition:.18s;}
+  .f-links a:hover{background:var(--accent);border-color:var(--accent);color:#062227;}
+
+  @media (max-width:900px){.masonry{columns:2;}}
+  @media (max-width:560px){.masonry{columns:1;}.lb-prev{left:6px;}.lb-next{right:6px;}}
+  @media (max-width:820px){.nav .nlinks a:not(.here){display:none;}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}.g-item,.lb,.f-btn{transition:none;}}
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap">
+      <a class="brand" href="index.html">YUSUP<span class="dot">.</span></a>
+      <div class="nlinks">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="index.html#methods">Methods</a>
+        <a href="index.html#work">Work</a>
+        <a href="publications.html">Publications</a>
+        <a href="gallery.html" class="here">Gallery</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="banner">
+    <div class="wrap">
+      <div class="eyebrow">Visual archive</div>
+      <h1>Gallery</h1>
+      <p class="b-def">SAR imagery, interferograms, DEMs, displacement maps, and animations — collected from my own research and the broader remote sensing community.</p>
+    </div>
+  </header>
+
+  <!-- filter bar -->
+  <div class="filter-bar">
+    <div class="wrap">
+      <button class="f-btn active" data-filter="all">All</button>
+      <button class="f-btn" data-filter="sar">SAR</button>
+      <button class="f-btn" data-filter="insar">InSAR</button>
+      <button class="f-btn" data-filter="lidar">LiDAR</button>
+      <button class="f-btn" data-filter="animation">Animations</button>
+      <button class="f-btn" data-filter="other">Other</button>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <!-- gallery -->
+  <section class="gallery-section">
+    <div class="wrap">
+      <div class="masonry" id="grid">
+
+        <!-- ── ADD YOUR ITEMS BELOW ────────────────────────────────────────
+             Each .g-item needs:
+               data-cat  : sar | insar | lidar | animation | other
+               data-title: shown in lightbox
+               data-desc : shown in lightbox (optional)
+               data-credit: shown in lightbox (optional, supports HTML)
+             For video/GIF items replace <img> with:
+               <video src="images/foo.mp4" autoplay loop muted playsinline></video>
+        ──────────────────────────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="insar"
+             data-title="Karamay Oilfield — ENVISAT ASAR Interferogram (2006–2008)"
+             data-desc="A typical wrapped interferogram generated from an ENVISAT ASAR pair spanning 29 November 2006 to 6 May 2008 over the Karamay Oilfield, Xinjiang, China. The inset zooms into the strongest deformation centre, where tightly packed concentric fringe rings reveal rapid surface uplift driven by subsurface water injection for enhanced oil recovery. Each full colour cycle represents ~2.8 cm of LOS displacement; the dense ring pattern signals deformation rates well above typical tectonic or natural signals. Published as part of a peer-reviewed study monitoring oilfield land-surface deformation with SBAS-InSAR."
+             data-credit="Amat et al. (2017) — &lt;a href='https://doi.org/10.3390/app7080772' target='_blank' rel='noopener'&gt;Applied Sciences 7(8), 772&lt;/a&gt; · ENVISAT ASAR / ESA">
+          <img src="images/Karamay_oilfield_EnVISAT ASAR_A-typical-interfrogram.png" loading="lazy" alt="ENVISAT ASAR interferogram Karamay oilfield Xinjiang water injection deformation" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Karamay Oilfield — Interferogram</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="Karamay Oilfield — SBAS-InSAR LOS Velocity 2003–2010"
+             data-desc="Mean LOS deformation velocity map derived from SBAS-InSAR processing of ENVISAT ASAR data acquired over the Karamay Oilfield, Xinjiang, China, between 2003 and 2010. Warm colours (orange-red) mark uplift hotspots of up to +33 mm/yr, concentrated over active water-injection wells used for secondary oil recovery. The deformation footprints align precisely with known injection site locations, showing InSAR's ability to resolve spatially complex, anthropogenic subsurface pressure changes over a seven-year period with no ground sensors deployed in the field."
+             data-credit="Amat et al. (2017) — &lt;a href='https://doi.org/10.3390/app7080772' target='_blank' rel='noopener'&gt;Applied Sciences 7(8), 772&lt;/a&gt; · ENVISAT ASAR / ESA">
+          <img src="images/Karamay_oilfield_EnVISAT ASAR LOS velocity.jpg" loading="lazy" alt="SBAS-InSAR LOS velocity map Karamay oilfield Xinjiang 2003-2010" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Karamay Oilfield — LOS Velocity</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="InSAR Interferogram"
+             data-desc="Wrapped interferometric phase showing ground deformation as colour cycles (fringes). Each full colour cycle represents one-half of the radar wavelength (~2.8 cm for Sentinel-1 C-band) of range change."
+             data-credit="Yusup Amat — own work">
+          <img src="images/01_Interferogram-circle.png" loading="lazy" alt="InSAR interferogram showing deformation fringes" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">InSAR Interferogram</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="InSAR Fringes — Mandalay, Myanmar, 2025"
+             data-desc="Sentinel-1 interferometric fringes over Mandalay, Myanmar, capturing surface deformation in 2025. Dense fringe patterns indicate rapid or large-magnitude displacement."
+             data-credit="Yusup Amat — own work">
+          <img src="images/02_Fringe_Mandalay_Myanmar_2025.png" loading="lazy" alt="InSAR fringes over Mandalay Myanmar 2025" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">InSAR Fringes — Mandalay, Myanmar</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="DEM — Active Mining Area"
+             data-desc="Digital Elevation Model over an active open-cut mining site. Topographic relief reveals the extraction pit and surrounding spoil heaps, providing spatial context for the InSAR-derived subsidence measurements."
+             data-credit="Yusup Amat — own work">
+          <img src="images/Fig1-MiningArea_DEM.png" loading="lazy" alt="DEM over active mining area" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">DEM — Active Mining Area</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="LOS Velocity Map — Mining Area"
+             data-desc="Mean line-of-sight (LOS) velocity derived from Sentinel-1 ascending VV multi-temporal InSAR (2015–2023). Negative values (cool colours) indicate motion away from the satellite, reflecting surface subsidence over the extraction footprint that peaks near -18 mm/yr."
+             data-credit="Yusup Amat — own work">
+          <img src="images/Fig2-MiningArea_LOS-velocity.png" loading="lazy" alt="LOS velocity map over mining area" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">LOS Velocity Map — Mining Area</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="Displacement Profile — Mining Area"
+             data-desc="Time-series displacement profile extracted along a cross-section through the maximum deformation zone. The profile reveals the spatial extent of the subsidence bowl and its progressive growth across the monitoring period."
+             data-credit="Yusup Amat — own work">
+          <img src="images/Fig3-MiningArea_Displacement-profile.png" loading="lazy" alt="Displacement profile over mining area" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Displacement Profile — Mining Area</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="InSAR LOS Velocity — St. Louis Sinkhole Areas (2017–2025)"
+             data-desc="Mean line-of-sight (LOS) velocity map derived from Sentinel-1 VV ascending SBAS-InSAR (2017–2025) over St. Louis, Missouri, with known sinkhole locations marked. Most areas show negligible deformation. Checked velocities at five documented sinkhole sites range from −0.5 to +1.9 mm/yr, indicating broadly stable ground — the recent sinkhole events were driven by localised infrastructure failure (water main breaks causing soil piping) rather than long-term measurable precursor subsidence visible at InSAR resolution."
+             data-credit="Yusup Amat — own work · Sentinel-1 / ESA Copernicus">
+          <img src="images/STL_sinkhole_velocityMap.PNG" loading="lazy" alt="InSAR LOS velocity map over St. Louis sinkhole areas 2017–2025" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">LOS Velocity — STL Sinkhole Areas</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="InSAR Velocity — I-44 / N. Broadway Sinkhole, St. Louis (zoom)"
+             data-desc="Zoomed InSAR LOS velocity map centred on the I-44 / N. Broadway and Bridle Street area of downtown St. Louis — the site of the June 2025 sinkhole that closed Interstate 44. Mean velocity at this location is +1.69 mm/yr (slight apparent uplift in the radar LOS), consistent with a ground that was not undergoing measurable long-term subsidence before the collapse. The event was attributed to a water main failure triggering rapid soil piping and void formation — a mechanism that can produce sudden collapse with little or no surface precursor detectable by repeat-pass InSAR at C-band."
+             data-credit="Yusup Amat — own work · Sentinel-1 / ESA Copernicus">
+          <img src="images/STL_sinkhole_velocityMap_re_SInkhole_Nbroadway_BriddleStreet.PNG" loading="lazy" alt="InSAR velocity map zoom I-44 N Broadway Bridle Street sinkhole St Louis" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">LOS Velocity — I-44 Sinkhole, STL</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="GNSS Time Series — Station PVEP, Palos Verdes Peninsula"
+             data-desc="Continuous GPS position time series for station PVEP on the Palos Verdes Peninsula (Los Angeles County), processed by the Nevada Geodetic Laboratory in the IGS20 reference frame. The three components (East, North, Up) reveal the station's long-term velocity, annual seasonal loading signal, and documented offsets from the 1994 Northridge earthquake."
+             data-credit="Nevada Geodetic Laboratory — &lt;a href='https://geodesy.unr.edu/NGLStationPages/stations/PVEP.sta' target='_blank' rel='noopener'&gt;geodesy.unr.edu&lt;/a&gt; · Blewitt, Hammond &amp; Kreemer (2018)">
+          <img src="images/PVEP_IGS20_Origional.png" loading="lazy" alt="GNSS time series for station PVEP, Palos Verdes Peninsula" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">GNSS Time Series — PVEP</div></div>
+        </div>
+
+        <!-- ── BAM EARTHQUAKE 2003 ──────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="sar"
+             data-title="Bam Earthquake 2003 — Master SLC"
+             data-desc="ENVISAT ASAR Single Look Complex (SLC) image acquired 3 December 2003, serving as the pre-event master scene. One of my first SAR processing exercises: learning to interpret the amplitude and phase of a complex radar image before interferometric combination. Descending track 120, Kerman Province, Iran."
+             data-credit="Yusup Amat — own work · Data: ESA / ENVISAT ASAR">
+          <img src="images/01_01_Bam_Earthquake_Master_SLC.JPG" loading="lazy" alt="Bam earthquake 2003 master SLC image" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">Bam 2003 — Master SLC</div></div>
+        </div>
+
+        <div class="g-item" data-cat="sar"
+             data-title="Bam Earthquake 2003 — Secondary SLC"
+             data-desc="ENVISAT ASAR SLC acquired 11 February 2004. This was the post-event secondary scene, paired with the December 2003 master to form the interferometric pair spanning the Mw 6.5 earthquake that killed at least 34,000 people in Bam."
+             data-credit="Yusup Amat — own work · Data: ESA / ENVISAT ASAR">
+          <img src="images/01_02_Bam_Earthquake_secondaryy_SLC.JPG" loading="lazy" alt="Bam earthquake 2003 secondary SLC image" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">Bam 2003 — Secondary SLC</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="Bam Earthquake 2003 — Raw Interferogram"
+             data-desc="Raw interferometric phase from ENVISAT ASAR descending track 120 (Dec 2003 – Feb 2004) over the Bam region, Kerman Province, Iran. Dense fringes near the epicentre reveal large coseismic displacement from the devastating Mw 6.5 event of 26 December 2003. One of my earliest InSAR products."
+             data-credit="Yusup Amat — own work · Data: ESA / ENVISAT ASAR">
+          <img src="images/01_03_Bam_Earthquake_interferogram.JPG" loading="lazy" alt="Bam earthquake 2003 raw interferogram" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Bam 2003 — Raw Interferogram</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="Bam Earthquake 2003 — Coherence"
+             data-desc="Interferometric coherence map for the Bam ENVISAT pair. High coherence (bright) indicates reliable phase; decorrelation (dark) near the rupture zone reflects surface disruption from strong ground shaking. Used to mask unreliable pixels before phase unwrapping."
+             data-credit="Yusup Amat — own work · Data: ESA / ENVISAT ASAR">
+          <img src="images/01_06_Bam_Earthquake_interferogram_coherence.JPG" loading="lazy" alt="Bam earthquake 2003 coherence map" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Bam 2003 — Coherence</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="Bam Earthquake 2003 — Goldstein-Filtered Interferogram"
+             data-desc="Final processed interferogram after flat-earth removal, topographic phase subtraction (SRTM DEM), atmospheric delay correction, and Goldstein adaptive spectral filtering. Each colour fringe cycle represents ~2.8 cm of LOS displacement. The first end-to-end InSAR product I completed after learning SAR and InSAR concepts."
+             data-credit="Yusup Amat — own work · Data: ESA / ENVISAT ASAR">
+          <img src="images/01_07_Bam_Earthquake_interferogram_GoldestineFilter.JPG" loading="lazy" alt="Bam earthquake 2003 Goldstein filtered interferogram" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Bam 2003 — Filtered Interferogram</div></div>
+        </div>
+
+        <!-- ── OTHER IMAGES ────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="sar"
+             data-title="NISAR — Cropland Mapping, Maize Triangle, South Africa"
+             data-desc="Agricultural data collected by the NASA-ISRO NISAR satellite over the Maize Triangle in South Africa. Each colour encodes crop information across the growing season: green = vegetated area, red = unvegetated surface, blue = rate of vegetation change during the season. The data helps scientists track crop growth, irrigation effects, and land-use change at large scale."
+             data-credit="NASA Earth / NISAR · Via NASA Earth Facebook">
+          <img src="images/NiSAR_cropland.jpeg" loading="lazy" alt="NISAR satellite cropland mapping Maize Triangle South Africa" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">NISAR — Cropland, South Africa</div></div>
+        </div>
+
+        <div class="g-item" data-cat="insar"
+             data-title="M 7.7 Mandalay Earthquake 2025 — InSAR Mosaic"
+             data-desc="Mosaic interferogram of the M 7.7 Mandalay, Burma (Myanmar) earthquake of 28 March 2025, combining Sentinel-1 descending (path 106) and ascending (path 33) acquisitions across 12 scenes each. The strike-slip rupture extended ~460 km × 15 km along a north-striking right-lateral fault between the India and Eurasia plates."
+             data-credit="Yusup Amat — own work · Data: ESA / Copernicus Sentinel-1">
+          <img src="images/Burma Earthquake interferogram re.jpg" loading="lazy" alt="M7.7 Mandalay Myanmar earthquake InSAR mosaic 2025" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">M 7.7 Mandalay — InSAR Mosaic</div></div>
+        </div>
+
+        <div class="g-item" data-cat="sar"
+             data-title="Papua, Indonesia — Umbra 50 cm SAR"
+             data-desc="50 cm single-look X-band SAR image of Papua, Indonesia, acquired 6 September 2024 by the Umbra commercial radar satellite. Ultra-high resolution imagery resolving fine structural and terrain detail across tropical landscape."
+             data-credit="Umbra Space · Via LinkedIn">
+          <img src="images/Papua Indonesia-Umbra.jpg" loading="lazy" alt="Umbra 50cm SAR image Papua Indonesia" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">Papua, Indonesia — Umbra 50 cm SAR</div></div>
+        </div>
+
+        <div class="g-item" data-cat="sar"
+             data-title="Spring Grove, IL — 50 cm SAR"
+             data-desc="50 cm resolution, 5× multi-look SAR image of Spring Grove, Illinois. High-resolution spaceborne radar imagery resolving suburban structure, roads, tree canopy, and water features in fine detail."
+             data-credit="Umbra Space · Via LinkedIn">
+          <img src="images/Spring Grove, IL.jpg" loading="lazy" alt="50cm SAR image Spring Grove Illinois" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">Spring Grove, IL — 50 cm SAR</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="LiDAR Point Cloud — Saint Louis Science Center (2012)"
+             data-desc="3D LiDAR point cloud of the Saint Louis Science Center, St. Louis, Missouri (2012). Colourised by elevation or intensity, the point cloud captures the building envelope, roof structure, and surrounding grounds at centimetre-level detail, a good example of what aerial LiDAR can do for urban mapping and structural documentation."
+             data-credit="Yusup Amat — own work">
+          <img src="images/LiDAR_pointCloud_ScinceCenter,STL_2012.png" loading="lazy" alt="LiDAR point cloud of Saint Louis Science Center 2012" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">Point Cloud — STL Science Center</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="Gateway Arch — St. Louis LiDAR (2012)"
+             data-desc="LiDAR-derived product over the Gateway Arch, St. Louis, Missouri (July 2012). High-density aerial LiDAR capturing the iconic stainless-steel monument and the surrounding riverfront parkland at centimetre-level vertical accuracy."
+             data-credit="Yusup Amat — own work">
+          <img src="images/STL_Arch_LiDAR_2012_07.PNG" loading="lazy" alt="LiDAR image of Gateway Arch St Louis Missouri" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">Gateway Arch — St. Louis LiDAR</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Eye of Africa — TanDEM-X DEM, Western Sahara"
+             data-desc="The Richat Structure (\"Eye of Africa\") in the western Sahara, Mauritania, rendered as a colour-coded digital elevation model from the German TanDEM-X radar mission (DLR). The 50 km-wide circular dome of Proterozoic rocks is one of the most striking natural landmarks visible from space."
+             data-credit="DLR / TanDEM-X · Via LinkedIn">
+          <img src="images/Eye of Africa_ from DLR.jpg" loading="lazy" alt="Eye of Africa Richat Structure TanDEM-X DEM western Sahara" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Eye of Africa — TanDEM-X DEM</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Sand Dune Field — Jimunai Desert, Xinjiang"
+             data-desc="NASA satellite image of a 30+ km sand dune field within the Burqin–Haba River–Jimunai Desert, near the tri-border zone of Xinjiang (China), Mongolia, Russia, and Kazakhstan. Tan-coloured linear dunes (coalescent barchans) reach 50–100 m in height; star dunes appear in the southeast. The Irtysh River flows through Burqin toward the Arctic Ocean."
+             data-credit="NASA · Identified by M. van der Valk &amp; Huub Eggen">
+          <img src="images/Sand dune field_Jimunai Desert.jpg" loading="lazy" alt="Sand dune field Jimunai Desert Xinjiang China" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Sand Dunes — Jimunai Desert</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="YA — My Initials in Landsat"
+             data-desc="\"Your Name in Landsat\" is NASA's interactive tool that spells out names and initials using real Landsat satellite imagery. Each letter is assembled from a landscape viewed from space: rivers, deserts, coastlines, and geology."
+             data-credit="NASA Landsat · science.nasa.gov/specials/your-name-in-landsat">
+          <img src="images/YA_in_landsat.png" loading="lazy" alt="YA initials spelled out in NASA Landsat satellite imagery" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">YA — My Initials in Landsat</div></div>
+        </div>
+
+        <!-- ── SAR ────────────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="sar"
+             data-title="Pacific Palisades Fire — Umbra SAR (9 Jan 2025)"
+             data-desc="Umbra-10 coherent change detection SAR image of the Pacific Palisades fire, acquired 9 January 2025 at 06:34 UTC. Coherent change detection highlights areas where surface scattering changed between acquisitions, making it possible to map burn perimeters and structural damage even through smoke, at night, or under cloud cover."
+             data-credit="Umbra Space Open Data Program · umbra.space/open-data">
+          <img src="images/Pacific_Palisades_Fire_2025-01-09-06-34-23_UMBRA-10_CSI.jpg" loading="lazy" alt="Umbra SAR coherent change detection Pacific Palisades fire January 2025" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">SAR</div><div class="g-title-ov">Pacific Palisades Fire — Umbra SAR</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Eaton Fire — Maxar Multispectral, Altadena CA (8 Jan 2025)"
+             data-desc="Maxar Technologies shortwave-infrared (SWIR) false-colour composite acquired over Altadena, California on 8 January 2025, during the peak of the Eaton Fire. In SWIR band combinations, active combustion glows in intense orange-red while unaffected urban surfaces stay dark, with no classification algorithm needed. Individual burning structures are identifiable block by block, street by street, giving emergency managers an immediate picture of where the fire front is. It shows exactly why sensor selection matters in crisis response: the right spectral bands deliver usable information within minutes of acquisition, well before any automated analysis pipeline can be run."
+             data-credit="Maxar Technologies · via Business Insider, 8 January 2025">
+          <img src="images/Eaton Fire Altadena, CA, MAXAR.webp" loading="lazy" alt="Maxar SWIR false-colour satellite image of Eaton Fire Altadena California January 2025" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Eaton Fire — Maxar Multispectral</div></div>
+        </div>
+
+        <!-- ── LIDAR ───────────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="lidar"
+             data-title="LiDAR Point Cloud — Forest Park, St. Louis (2012)"
+             data-desc="Aerial LiDAR point cloud over Forest Park, St. Louis, one of the largest urban parks in the United States. The dense point cloud captures tree canopy structure, open meadows, the Grand Basin, and surrounding cultural facilities at centimetre-level vertical precision."
+             data-credit="Yusup Amat — own work">
+          <img src="images/LiDAR_pointCloud_Forest_Park,STL_2012.png" loading="lazy" alt="LiDAR point cloud of Forest Park St Louis 2012" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">Point Cloud — Forest Park, STL</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="LiDAR — Gateway Arch &amp; Nearby Areas, St. Louis (2012)"
+             data-desc="Aerial LiDAR coverage extending across the Gateway Arch and its surrounding riverfront district, St. Louis (2012). The broad swath reveals urban topography, building footprints, and the Mississippi River bank in a single colourised dataset."
+             data-credit="Yusup Amat — own work">
+          <img src="images/LiDAR_Arch_STL_and nearby areas_2012.png" loading="lazy" alt="LiDAR of Gateway Arch and nearby areas St Louis 2012" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">LiDAR — Arch &amp; Riverfront, STL</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="LiDAR — Gateway Arch Detail, St. Louis (2012)"
+             data-desc="Close-range LiDAR view of the Gateway Arch, St. Louis, from the 2012 aerial survey. The high point density captures the curved stainless-steel legs and the geometry of the visitor centre roof, demonstrating LiDAR's ability to document complex architectural forms in 3D."
+             data-credit="Yusup Amat — own work">
+          <img src="images/LiDAR_2012_STL_Arch_44.png" loading="lazy" alt="LiDAR detail of Gateway Arch St Louis 2012" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">LiDAR Detail — Gateway Arch</div></div>
+        </div>
+
+        <div class="g-item" data-cat="lidar"
+             data-title="LiDAR Point Cloud — Illinois (2020)"
+             data-desc="Aerial LiDAR point cloud acquired over Illinois in 2020. Colourised by elevation or return intensity, the dataset captures terrain, vegetation structure, and built features across the survey area."
+             data-credit="Yusup Amat — own work">
+          <img src="images/LiDAR_PointCLoud_2020_IL.png" loading="lazy" alt="LiDAR point cloud Illinois 2020" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">Point Cloud — Illinois (2020)</div></div>
+        </div>
+
+        <!-- ── OTHER ───────────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="lidar"
+             data-title="Busch Stadium — USGS Airborne LiDAR, St. Louis (2012)"
+             data-desc="USGS airborne LiDAR point cloud of Busch Stadium, home of the St. Louis Cardinals, in downtown St. Louis, Missouri (2012). The high-density scan resolves the stadium bowl, roof canopy, and surrounding urban fabric in three dimensions."
+             data-credit="USGS — Airborne LiDAR 2012">
+          <img src="images/STL_Stadium_Cardinal.png" loading="lazy" alt="USGS LiDAR of Busch Stadium St Louis Cardinals 2012" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">LiDAR</div><div class="g-title-ov">Busch Stadium — LiDAR, STL</div></div>
+        </div>
+
+        <!-- ── HOKKAIDO LANDSLIDE ─────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="insar"
+             data-title="Hokkaido Landslide 2018 — Coherence RGB vs. Peak Ground Velocity"
+             data-desc="Left: PALSAR-2 coherence colour composite (RGB = Pre / Co / Co) from descending pairs over the 2018 Iburi earthquake area. Pre-event coherence: 20180614–20180823; co-event coherence: 20180823–20180906. Right: peak ground velocity (PGV) map for 6 September 2018. Areas with high PGV correspond to zones of coherence loss (low coherence = decorrelation = landslide disturbance), enabling rapid landslide identification directly from the SAR coherence composite."
+             data-credit="Yusup Amat — own work · Data: JAXA / ALOS-2 PALSAR-2 · Aimaiti et al. (2019), Remote Sensing 11(20), 2351. CC BY 4.0">
+          <img src="images/Hokkaido_landslide_coherence_VS_Peak ground velocity.png" loading="lazy" alt="PALSAR-2 coherence RGB composite vs peak ground velocity map Hokkaido landslide 2018" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">InSAR</div><div class="g-title-ov">Hokkaido — Coherence vs. PGV</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Hokkaido Landslide 2018 — PALSAR-2 Coherence RGB Animation"
+             data-desc="On 6 September 2018, a Mw 6.7 earthquake struck Iburi Subprefecture, southern Hokkaido, Japan, triggering mass landslides across the area — especially around Atsuma town. This animated coherence RGB composite is built from ALOS-2 PALSAR-2 descending HH-polarisation data: R = pre-event coherence (20180614–20180823), G = co-event coherence (20180823–20180906), B = co-event coherence. Coherence is a normalised metric (0–1) that measures the phase and amplitude stability of each pixel between two SAR acquisitions. High coherence (bright, warm tones) indicates stable, undisturbed ground; low coherence (dark, cool tones) marks areas where the surface changed — due to landslide movement, vegetation disturbance, or collapse. In the animation, the dramatic loss of coherence across the landslide-affected slopes is immediately visible as colour shifts from the pre-event baseline. Because SAR penetrates cloud and works at night, this coherence composite provided one of the first consistent damage maps of the landslide extent within days of the earthquake."
+             data-credit="Yusup Amat — own work · Data: JAXA / ALOS-2 PALSAR-2">
+          <img src="images/Hokkaido_landslide_Coherence_RGB.gif" alt="PALSAR-2 coherence RGB animation showing landslide-induced decorrelation Hokkaido 2018" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Hokkaido — Coherence RGB Animation</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Hokkaido 2018 — Elevation, Land Cover, Landslide Susceptibility &amp; Seismic Intensity"
+             data-desc="Four-panel animated overview of the environmental and hazard context of the 6 September 2018 Mw 6.7 Iburi earthquake, Hokkaido, Japan. The animation cycles through: (1) Elevation — the epicentre sits in relatively low-lying terrain, not on the steep upland slopes; (2) Land cover — the affected area is dominated by grassland, deciduous broadleaf forest (DBF), deciduous needleleaf forest (DNF), and some cropland, all of which sit on volcanic soils that became saturated after Typhoon Jebi struck the day before; (3) Landslide susceptibility — the epicentral zone falls in a moderate susceptibility class, not the highest-risk terrain on the island, yet triggered up to 6,000 landslides; (4) Seismic intensity — peak intensity was concentrated tightly around the epicentre, and it is the combination of extreme shaking intensity on top of typhoon-saturated moderate-susceptibility terrain that explains the catastrophic slope failures. The sequence illustrates why no single map layer tells the full story: susceptibility alone would not have flagged this area as the highest priority, but the triggering mechanism and pre-conditioning from rainfall changed everything."
+             data-credit="Yusup Amat — own work · Elevation: SRTM / NASA; Land cover: MCD12Q1 / MODIS; Landslide susceptibility: NASA Global Landslide Susceptibility (Kirschbaum &amp; Stanley 2018); Seismic intensity: Japan Meteorological Agency">
+          <img src="images/Hokkaido_Elevation_LC_LSSusc_SeismicIntnesity.gif" alt="Animated four-panel map of Hokkaido showing elevation, land cover, landslide susceptibility and seismic intensity for the 2018 Iburi earthquake" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Hokkaido 2018 — Context Maps</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Hokkaido Landslide 2018 — Optical Image"
+             data-desc="On 6 September 2018, a Mw 6.6 earthquake struck Iburi Subprefecture in southern Hokkaido, Japan, just one day after Typhoon Jebi had deposited heavy rainfall across the region. The saturated volcanic soil created a geologically unstable subsurface, triggering up to 6,000 landslides near Atsuma town. The optical image shows the widespread slope failure scars across the hillsides."
+             data-credit="The Asahi Shimbun / Getty Images">
+          <img src="images/Hokkaido_Landslide_optical_image.jpg" loading="lazy" alt="Optical image of Hokkaido landslide 2018 after Mw 6.6 earthquake" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Hokkaido Landslide 2018 — Optical</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Hokkaido Landslide 2018 — NASA Global Landslide Susceptibility"
+             data-desc="NASA Global Landslide Susceptibility Map overlaid on Hokkaido, with the Mw 6.6 epicentre (black star) marked in southern Hokkaido. Worth noting: the epicentre falls within a moderate susceptibility zone, not the highest-risk terrain on the island. Yet the 2018 event triggered up to 6,000 landslides concentrated right around it. Looking at the seismic intensity map alongside this one explains why: extreme ground shaking at the epicentre overcame the moderate baseline susceptibility, and pre-event soil saturation from Typhoon Jebi made things worse. Susceptibility maps alone do not tell you where landslides will strike; the triggering mechanism and shaking intensity matter just as much."
+             data-credit="NASA Global Landslide Susceptibility Map · Kirschbaum &amp; Stanley (2018), Nat. Hazards · Basemap: Esri / Maxar / USGS">
+          <img src="images/NASA Global Landslide Susceptibility-Hokkaido.jpg" loading="lazy" alt="NASA Global Landslide Susceptibility map over Hokkaido with 2018 earthquake epicentre" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Hokkaido 2018 — Landslide Susceptibility</div></div>
+        </div>
+
+        <div class="g-item" data-cat="other"
+             data-title="Hokkaido Landslide 2018 — Seismic Intensity Distribution"
+             data-desc="Seismic intensity distribution across Hokkaido from the 6 September 2018 Mw 6.6 Iburi earthquake (red star). Peak intensity of 5.4-6.7 is confined to the area immediately around the epicentre in southern Hokkaido, decaying rapidly outward. When you compare this map with the NASA landslide susceptibility map, the pattern becomes clear: the landslide cluster lines up with the highest shaking intensity zone, not with the highest pre-existing susceptibility zones. Extreme ground acceleration on top of Typhoon-Jebi-saturated volcanic soils was enough to cause catastrophic slope failure, which shows that real-time seismic intensity data matters just as much as long-term susceptibility mapping for disaster response."
+             data-credit="Seismic intensity data: Japan Meteorological Agency · Basemap: Esri / Maxar / USGS">
+          <img src="images/Seismic Intensity_Hokkaido.jpg" loading="lazy" alt="Seismic intensity distribution map Hokkaido 2018 Mw 6.6 earthquake" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Other</div><div class="g-title-ov">Hokkaido 2018 — Seismic Intensity</div></div>
+        </div>
+
+        <!-- ── ANIMATIONS ──────────────────────────────────────────────── -->
+
+        <div class="g-item" data-cat="animation"
+             data-title="Hokkaido Landslide 2018 — PALSAR-2 Intensity RGB"
+             data-desc="ALOS-2 PALSAR-2 HH-polarisation intensity composite (RGB = Pre / Post / Post) spanning the 6 September 2018 Mw 6.6 Iburi earthquake, Hokkaido, Japan. Pre-event: 23 August 2018; post-event: 6 September 2018. Areas that changed, such as landslide scars and collapsed slopes, appear as colour shifts from the pre-event grey baseline, making thousands of individual failure sites visible across Atsuma town in a single radar image."
+             data-credit="JAXA / ALOS-2 PALSAR-2 · Yusup Amat — own work">
+          <img src="images/Hokkaido_landslide_PALSAR-2_Intensity_HH-RGB_Pre_Post_Post.gif" alt="PALSAR-2 intensity RGB pre-post composite of Hokkaido 2018 landslides" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Hokkaido Landslide — PALSAR-2 RGB</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Moving Train — Detroit Metro Airport (ICEYE SAR)"
+             data-desc="50 cm resolution ICEYE-X23 SAR dwell collection (1932 UTC, 15 Sep 2023) over Detroit Metropolitan Airport. The bright diagonal streak is a moving train. SAR processors assume a stationary world, so moving objects get displaced in the along-track direction in proportion to their radial velocity. The sequence shows the displacement growing as the satellite passes overhead. Power line signatures (a row of bright dots) are also visible near the road."
+             data-credit="ICEYE-X23 · Shared by Darren Muff / LinkedIn">
+          <img src="images/Detroit International Airport.gif" alt="ICEYE SAR animation showing moving train at Detroit airport" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Moving Train — Detroit Airport (SAR)</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Lava Flow Encroaching on Grindavík, Iceland (ICEYE SAR)"
+             data-desc="ICEYE SAR image captured hours after lava from the Reykjanes Peninsula eruption advanced toward the village of Grindavík, Iceland. The image reveals the lava flow boundary, power lines, radar layover from buildings, and notably an ice-free ocean just offshore in winter. Shared by Darren Muff."
+             data-credit="ICEYE · Shared by Darren Muff / LinkedIn">
+          <img src="images/Lava Iceland.gif" alt="ICEYE SAR image of lava flow approaching Grindavik Iceland" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Lava Flow — Grindavík, Iceland (SAR)</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Fagradalsfjall Eruption 2021 — ICEYE SAR Monitoring"
+             data-desc="ICEYE SAR monitoring of the Fagradalsfjall volcano eruption, Iceland, 2021. Over 26 days, seven fissures opened and poured lava. Daily SAR observations, produced in collaboration with the University of Iceland and the Icelandic Space Agency, fed a predictive model for anticipating new fissure locations, which was critical for public safety in this tourist-heavy region."
+             data-credit="ICEYE · iceye.com">
+          <img src="images/Volcanic eruption.webp" alt="ICEYE SAR monitoring of Fagradalsfjall volcanic eruption Iceland 2021" />
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Fagradalsfjall Eruption — SAR Monitor</div></div>
+        </div>
+
+        <div class="g-item" data-cat="animation"
+             data-title="Wildfire Smoke — US East Coast (July 14–19, 2026)"
+             data-desc="NASA satellite imagery capturing wildfire smoke blanketing the US East Coast between 14–19 July 2026. The plume visible here is a reminder of why early and accurate wildfire risk prediction matters at a continental scale. On the research side, I am exploring the use of high-resolution L-band SAR (ALOS-2/PALSAR-2) to estimate pre-fire soil moisture and fuel moisture content — both strong predictors of ignition risk — combined with optical vegetation indices, weather records (temperature, wind, relative humidity, VPD), and topographic data, fed into a machine-learning model to map wildfire occurrence probability at the landscape scale. L-band's ability to penetrate vegetation canopy and sense moisture in the top soil layer makes it a natural complement to the optical and meteorological layers that current operational fire risk systems rely on."
+             data-credit="NASA — National Aeronautics and Space Administration · Via LinkedIn">
+          <video src="images/nasa_wildfire_smoke.mp4" autoplay loop muted playsinline></video>
+          <div class="g-overlay"></div>
+          <div class="g-meta"><div class="g-cat-badge">Animation</div><div class="g-title-ov">Wildfire Smoke — US East Coast 2026</div></div>
+        </div>
+
+
+      </div>
+      <div class="empty" id="empty">No images in this category yet.</div>
+    </div>
+  </section>
+
+  <!-- lightbox -->
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lb-close" id="lb-close" aria-label="Close">×</button>
+    <span class="lb-counter" id="lb-counter"></span>
+    <button class="lb-prev" id="lb-prev" aria-label="Previous">‹</button>
+    <button class="lb-next" id="lb-next" aria-label="Next">›</button>
+    <div class="lb-inner">
+      <div class="lb-media" id="lb-media"></div>
+      <div class="lb-caption">
+        <div class="lb-title" id="lb-title"></div>
+        <div class="lb-desc" id="lb-desc"></div>
+        <div class="lb-credit" id="lb-credit"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <div class="f-name">Yusup Amat</div>
+        <div class="f-sub">SAR &amp; InSAR · vertical land motion · Saint Louis University</div>
+      </div>
+      <div class="f-links">
+        <a href="index.html">Home</a>
+        <a href="mailto:tuprak100@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/yusupujiang-aimaiti-989b8bb3/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=84_WFsgAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0000-0002-4848-5399" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── Filter ─────────────────────────────────────────── */
+  var items = [].slice.call(document.querySelectorAll('.g-item'));
+  var btns  = [].slice.call(document.querySelectorAll('.f-btn'));
+  var countEl = document.getElementById('count');
+  var emptyEl = document.getElementById('empty');
+  var currentFilter = 'all';
+
+  function visibleItems(){
+    return items.filter(function(el){ return !el.classList.contains('hidden'); });
+  }
+
+  function updateCount(){
+    var n = visibleItems().length;
+    countEl.textContent = n + ' image' + (n !== 1 ? 's' : '');
+    emptyEl.classList.toggle('visible', n === 0);
+  }
+
+  function filterGallery(cat){
+    currentFilter = cat;
+    items.forEach(function(el){
+      var match = cat === 'all' || el.dataset.cat === cat;
+      el.classList.toggle('hidden', !match);
+    });
+    updateCount();
+  }
+
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      filterGallery(btn.dataset.filter);
+    });
+  });
+
+  updateCount();
+
+  /* ── Lightbox ────────────────────────────────────────── */
+  var lb      = document.getElementById('lb');
+  var lbMedia = document.getElementById('lb-media');
+  var lbTitle = document.getElementById('lb-title');
+  var lbDesc  = document.getElementById('lb-desc');
+  var lbCredit= document.getElementById('lb-credit');
+  var lbCount = document.getElementById('lb-counter');
+  var lbClose = document.getElementById('lb-close');
+  var lbPrev  = document.getElementById('lb-prev');
+  var lbNext  = document.getElementById('lb-next');
+  var current = -1;
+
+  function getVisible(){ return visibleItems(); }
+
+  function openLightbox(idx){
+    var visible = getVisible();
+    if(!visible.length) return;
+    idx = (idx + visible.length) % visible.length;
+    current = idx;
+    var item = visible[idx];
+
+    // build media
+    lbMedia.innerHTML = '';
+    var mediaEl = item.querySelector('video') || item.querySelector('img');
+    var clone;
+    if(mediaEl.tagName === 'VIDEO'){
+      clone = document.createElement('video');
+      clone.src = mediaEl.src;
+      clone.autoplay = true;
+      clone.loop = true;
+      clone.muted = true;
+      clone.setAttribute('playsinline','');
+    } else {
+      clone = document.createElement('img');
+      clone.src = mediaEl.src;
+      clone.alt = mediaEl.alt;
+    }
+    lbMedia.appendChild(clone);
+
+    lbTitle.textContent  = item.dataset.title  || '';
+    lbDesc.textContent   = item.dataset.desc   || '';
+    lbCredit.innerHTML   = item.dataset.credit ? '📷 ' + item.dataset.credit : '';
+    lbCount.textContent  = (idx + 1) + ' / ' + visible.length;
+
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(){
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    lbMedia.innerHTML = '';
+    current = -1;
+  }
+
+  items.forEach(function(item, i){
+    item.addEventListener('click', function(){
+      var visible = getVisible();
+      var idx = visible.indexOf(item);
+      openLightbox(idx);
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', function(e){ e.stopPropagation(); openLightbox(current - 1); });
+  lbNext.addEventListener('click', function(e){ e.stopPropagation(); openLightbox(current + 1); });
+
+  lb.addEventListener('click', function(e){
+    if(e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape')      closeLightbox();
+    if(e.key === 'ArrowLeft')   openLightbox(current - 1);
+    if(e.key === 'ArrowRight')  openLightbox(current + 1);
+  });
+
+})();
+</script>
+</body>
+</html>
